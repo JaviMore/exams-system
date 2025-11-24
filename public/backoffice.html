@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backoffice - Exam System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%93%9D%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <div id="loginSection">
+            <h1>🔐 Backoffice Login 🔐</h1>
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button onclick="backofficeLogin()" style="flex: 1;">Login</button>
+                    <button onclick="goToHome()" class="back-button" style="flex: 1;">Back to Home</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Backoffice Section -->
+        <div id="backofficeSection" class="hidden">
+            <h1>Backoffice - Exam Management</h1>
+            
+            <div class="backoffice-nav">
+                <button class="tab-button active" onclick="showTab('createExam')">Create Exam</button>
+                <button class="tab-button" onclick="showTab('manageExams')">Manage Exams</button>
+                <button class="tab-button" onclick="showTab('viewResults')">View Results</button>
+                <button class="back-button" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Create Exam Tab -->
+            <div id="createExamTab" class="tab-content active">
+                <h2>Create New Exam</h2>
+                
+                <!-- Import JSON Section -->
+                <div class="import-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                    <h3>Import Exam from JSON</h3>
+                    <div class="form-group">
+                        <label for="jsonFileInput">Upload JSON File:</label>
+                        <input type="file" id="jsonFileInput" accept=".json" onchange="handleFileUpload(event)">
+                    </div>
+                    <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                        <strong>JSON Format Example:</strong>
+                        <button onclick="downloadSampleJSON()" style="background: #93c5fd; padding: 8px 15px; margin-left: 10px;">Download Sample</button>
+                    </p>
+                </div>
+
+                <!-- Manual Creation Section -->
+                <div class="manual-creation">
+                    <h3>Or Create Manually</h3>
+                    <div class="form-group">
+                        <label for="examTitle">Exam Title:</label>
+                        <input type="text" id="examTitle" placeholder="e.g. Advanced JavaScript Exam">
+                    </div>
+                    <div class="form-group">
+                        <label for="examDuration">Duration (minutes):</label>
+                        <input type="number" id="examDuration" placeholder="30" value="30" min="1" max="300">
+                    </div>
+
+                    <div id="questionsBuilder">
+                        <h3>Questions</h3>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button onclick="addQuestion()" style="flex: 1;">+ Add Question</button>
+                        <button onclick="saveExam()" style="flex: 1; background: #10b981;">Save Exam</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Exams Tab -->
+            <div id="manageExamsTab" class="tab-content">
+                <h2>Manage Existing Exams</h2>
+                <div id="examsList">
+                    <!-- Exams will be loaded here -->
+                </div>
+            </div>
+
+            <!-- View Results Tab -->
+            <div id="viewResultsTab" class="tab-content">
+                <h2>Student Results</h2>
+                <div style="margin-bottom: 20px;">
+                    <button onclick="clearAllResults()" style="background: #dc2626; padding: 12px 24px;">Clear All Results</button>
+                </div>
+                <div class="form-group">
+                    <label for="filterExam">Filter by exam:</label>
+                    <select id="filterExam" onchange="filterResults()">
+                        <option value="">All exams</option>
+                    </select>
+                </div>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Exam</th>
+                            <th>Score</th>
+                            <th>Correct/Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let exams = [];
+        let allResults = [];
+        let isAuthenticated = false;
+
+        // === Cookie helpers ===
+        function setCookie(name, value, minutes) {
+            const expires = minutes ? ";expires=" + new Date(Date.now() + minutes*60000).toUTCString() : "";
+            document.cookie = name + "=" + encodeURIComponent(value) + expires + ";path=/";
+        }
+        function getCookie(name) {
+            const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? decodeURIComponent(match[2]) : null;
+        }
+        function eraseCookie(name) { document.cookie = name + '=; Max-Age=0; path=/'; }
+
+        // Auto-login if cookie present
+        window.addEventListener('load', () => {
+            const auth = getCookie('backofficeAuth');
+            if (auth === '1') {
+                isAuthenticated = true;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('backofficeSection').classList.remove('hidden');
+                addQuestion();
+                loadResults();
+                loadExamsForManagement();
+            }
+        });
+
+        async function backofficeLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/backoffice/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    isAuthenticated = true;
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('backofficeSection').classList.remove('hidden');
+                    addQuestion(); // Add initial question
+                    loadExamsForManagement();
+                    setCookie('backofficeAuth','1', 60); // 1 hour
+                } else {
+                    alert('Invalid credentials. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Login failed. Please try again.');
+            }
+        }
+
+        function logout() {
+            isAuthenticated = false;
+            document.getElementById('backofficeSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            eraseCookie('backofficeAuth');
+        }
+
+        function downloadSampleJSON() {
+            const sampleExam = {
+                "title": "Sample Exam Title",
+                "durationMinutes": 30,
+                "questions": [
+                    {
+                        "question": "What is the capital of France?",
+                        "options": ["London", "Berlin", "Paris", "Madrid"],
+                        "correctAnswer": 2,
+                        "explanation": "Paris is the capital and largest city of France."
+                    },
+                    {
+                        "question": "What is 2 + 2?",
+                        "options": ["3", "4", "5", "6"],
+                        "correctAnswer": 1,
+                        "explanation": "Basic arithmetic: 2 plus 2 equals 4."
+                    }
+                ]
+            };
+
+            const blob = new Blob([JSON.stringify(sampleExam, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'public/sample_exam.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const examData = JSON.parse(e.target.result);
+                    
+                    // Validate JSON structure
+                    if (!examData.title || !examData.questions || !Array.isArray(examData.questions)) {
+                        alert('Invalid JSON format. Please ensure the file has "title" and "questions" fields.');
+                        return;
+                    }
+
+                    // Validate questions
+                    for (let i = 0; i < examData.questions.length; i++) {
+                        const q = examData.questions[i];
+                        if (!q.question || !q.options || !Array.isArray(q.options) || 
+                            q.options.length !== 4 || typeof q.correctAnswer !== 'number' || 
+                            !q.explanation) {
+                            alert(`Invalid question format at index ${i}. Each question must have: question, options (array of 4), correctAnswer (number), and explanation.`);
+                            return;
+                        }
+                    }
+
+                    // Populate form with JSON data
+                    document.getElementById('examTitle').value = examData.title;
+                    document.getElementById('examDuration').value = examData.durationMinutes || 30;
+                    
+                    // Clear existing questions
+                    document.getElementById('questionsBuilder').innerHTML = '<h3>Questions</h3>';
+                    questions = [];
+
+                    // Add questions from JSON
+                    examData.questions.forEach((q, idx) => {
+                        questions.push({
+                            question: q.question,
+                            options: q.options,
+                            correctAnswer: q.correctAnswer,
+                            explanation: q.explanation
+                        });
+
+                        const questionDiv = document.createElement('div');
+                        questionDiv.className = 'question-builder';
+                        questionDiv.id = `question${idx}`;
+                        questionDiv.innerHTML = `
+                            <h4>Question ${idx + 1}</h4>
+                            <div class="form-group">
+                                <label>Question:</label>
+                                <input type="text" id="q${idx}_text" value="${escapeHtml(q.question)}" placeholder="Enter your question">
+                            </div>
+                            <div class="form-group">
+                                <label>Options:</label>
+                                ${[0, 1, 2, 3].map(i => `
+                                    <div class="option-input">
+                                        <input type="radio" name="correct${idx}" value="${i}" ${i === q.correctAnswer ? 'checked' : ''}>
+                                        <input type="text" id="q${idx}_opt${i}" value="${escapeHtml(q.options[i])}" placeholder="Option ${i + 1}">
+                                    </div>
+                                `).join('')}
+                                <small>Check the radio button to mark the correct answer</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Explanation:</label>
+                                <textarea id="q${idx}_explanation" placeholder="Explanation for the correct answer">${escapeHtml(q.explanation)}</textarea>
+                            </div>
+                            <button onclick="removeQuestion(${idx})" style="background: #dc3545;">Remove Question</button>
+                        `;
+                        document.getElementById('questionsBuilder').appendChild(questionDiv);
+                    });
+
+                    alert(`Successfully loaded exam with ${examData.questions.length} questions!`);
+                    
+                    // Clear file input
+                    event.target.value = '';
+
+                } catch (error) {
+                    alert('Error parsing JSON file: ' + error.message);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            if (tabName === 'createExam') {
+                document.getElementById('createExamTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+            } else if (tabName === 'manageExams') {
+                document.getElementById('manageExamsTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+                loadExamsForManagement();
+            } else if (tabName === 'viewResults') {
+                document.getElementById('viewResultsTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[2].classList.add('active');
+                loadResults();
+            }
+        }
+
+        function addQuestion() {
+            const questionIndex = questions.length;
+            questions.push({
+                question: '',
+                options: ['', '', '', ''],
+                correctAnswer: 0,
+                explanation: ''
+            });
+
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-builder';
+            questionDiv.id = `question${questionIndex}`;
+            questionDiv.innerHTML = `
+                <h4>Question ${questionIndex + 1}</h4>
+                <div class="form-group">
+                    <label>Question:</label>
+                    <input type="text" id="q${questionIndex}_text" placeholder="Enter your question">
+                </div>
+                <div class="form-group">
+                    <label>Options:</label>
+                    ${[0, 1, 2, 3].map(i => `
+                        <div class="option-input">
+                            <input type="radio" name="correct${questionIndex}" value="${i}" ${i === 0 ? 'checked' : ''}>
+                            <input type="text" id="q${questionIndex}_opt${i}" placeholder="Option ${i + 1}">
+                        </div>
+                    `).join('')}
+                    <small>Check the radio button to mark the correct answer</small>
+                </div>
+                <div class="form-group">
+                    <label>Explanation:</label>
+                    <textarea id="q${questionIndex}_explanation" placeholder="Explanation for the correct answer"></textarea>
+                </div>
+                <button onclick="removeQuestion(${questionIndex})" style="background: #dc3545;">Remove Question</button>
+            `;
+
+            document.getElementById('questionsBuilder').appendChild(questionDiv);
+        }
+
+        function removeQuestion(index) {
+            document.getElementById(`question${index}`).remove();
+            questions[index] = null;
+        }
+
+        async function saveExam() {
+            const title = document.getElementById('examTitle').value.trim();
+            
+            if (!title) {
+                alert('Please enter a title for the exam');
+                return;
+            }
+
+            const examQuestions = [];
+            questions.forEach((q, index) => {
+                if (q !== null) {
+                    const questionText = document.getElementById(`q${index}_text`).value.trim();
+                    const options = [0, 1, 2, 3].map(i => 
+                        document.getElementById(`q${index}_opt${i}`).value.trim()
+                    );
+                    const correctAnswer = parseInt(
+                        document.querySelector(`input[name="correct${index}"]:checked`).value
+                    );
+                    const explanation = document.getElementById(`q${index}_explanation`).value.trim();
+
+                    if (questionText && options.every(opt => opt) && explanation) {
+                        examQuestions.push({
+                            id: examQuestions.length + 1,
+                            question: questionText,
+                            options: options,
+                            correctAnswer: correctAnswer,
+                            explanation: explanation
+                        });
+                    }
+                }
+            });
+
+            if (examQuestions.length === 0) {
+                alert('Please add at least one complete question');
+                return;
+            }
+
+            const durationMinutes = parseInt(document.getElementById('examDuration').value) || 30;
+
+            const exam = {
+                title: title,
+                durationMinutes: durationMinutes,
+                questions: examQuestions
+            };
+
+            try {
+                const response = await fetch('/api/exams', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(exam)
+                });
+
+                if (response.ok) {
+                    alert('Exam created successfully!');
+                    document.getElementById('examTitle').value = '';
+                    document.getElementById('questionsBuilder').innerHTML = '<h3>Questions</h3>';
+                    questions = [];
+                    addQuestion();
+                } else {
+                    alert('Error creating exam');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to server');
+            }
+        }
+
+        async function loadResults() {
+            try {
+                const [resultsResponse, examsResponse] = await Promise.all([
+                    fetch('/api/results'),
+                    fetch('/api/exams')
+                ]);
+
+                allResults = await resultsResponse.json();
+                exams = await examsResponse.json();
+
+                const filterSelect = document.getElementById('filterExam');
+                filterSelect.innerHTML = '<option value="">All exams</option>';
+                exams.forEach(exam => {
+                    const option = document.createElement('option');
+                    option.value = exam.id;
+                    option.textContent = exam.title;
+                    filterSelect.appendChild(option);
+                });
+
+                displayResults(allResults);
+            } catch (error) {
+                console.error('Error loading results:', error);
+            }
+        }
+
+        function filterResults() {
+            const examId = document.getElementById('filterExam').value;
+            if (examId) {
+                const filtered = allResults.filter(r => r.examId === parseInt(examId));
+                displayResults(filtered);
+            } else {
+                displayResults(allResults);
+            }
+        }
+
+        function displayResults(results) {
+            const tbody = document.getElementById('resultsTableBody');
+            tbody.innerHTML = '';
+
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No results available</td></tr>';
+                return;
+            }
+
+            results.forEach(result => {
+                const tr = document.createElement('tr');
+                const date = new Date(result.date).toLocaleString('en-US');
+                tr.innerHTML = `
+                    <td>${date}</td>
+                    <td>${result.userName}</td>
+                    <td>${result.examTitle}</td>
+                    <td>${result.score.toFixed(1)}%</td>
+                    <td>${result.correctAnswers}/${result.totalQuestions}</td>
+                    <td>
+                        <button onclick="deleteResult(${result.id})" style="background: #dc2626; padding: 6px 12px; font-size: 14px;">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function loadExamsForManagement() {
+            try {
+                const response = await fetch('/api/exams');
+                const exams = await response.json();
+                
+                const examsList = document.getElementById('examsList');
+                examsList.innerHTML = '';
+                
+                if (exams.length === 0) {
+                    examsList.innerHTML = '<p style="color: #666;">No exams available</p>';
+                    return;
+                }
+                
+                exams.forEach(exam => {
+                    const examCard = document.createElement('div');
+                    examCard.className = 'exam-card';
+                    examCard.style.cssText = 'background: #f8f9fa; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #93c5fd;';
+                    examCard.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <h3 style="margin: 0 0 10px 0; color: #333;">${exam.title}</h3>
+                                <p style="margin: 5px 0; color: #666;"><strong>ID:</strong> ${exam.id}</p>
+                                <p style="margin: 5px 0; color: #666;"><strong>Duration:</strong> ${exam.durationMinutes} minutes</p>
+                                <p style="margin: 5px 0; color: #666;"><strong>Questions:</strong> ${exam.questions.length}</p>
+                                <div id="editForm${exam.id}" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 5px;">
+                                    <div class="form-group">
+                                        <label>Title:</label>
+                                        <input type="text" id="editTitle${exam.id}" value="${exam.title}" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Duration (minutes):</label>
+                                        <input type="number" id="editDuration${exam.id}" value="${exam.durationMinutes}" min="1" max="300" style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                                    </div>
+                                    <button onclick="saveExamChanges(${exam.id})" style="background: #10b981; padding: 8px 16px; margin-right: 10px;">Save Changes</button>
+                                    <button onclick="cancelEdit(${exam.id})" style="background: #93c5fd; padding: 8px 16px;">Cancel</button>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-direction: column;">
+                                <button onclick="toggleEdit(${exam.id})" style="background: #60a5fa; padding: 10px 20px; white-space: nowrap;">Edit</button>
+                                <button onclick="deleteExam(${exam.id})" style="background: #dc2626; padding: 10px 20px; white-space: nowrap;">Delete</button>
+                            </div>
+                        </div>
+                    `;
+                    examsList.appendChild(examCard);
+                });
+            } catch (error) {
+                console.error('Error loading exams:', error);
+            }
+        }
+
+        function toggleEdit(examId) {
+            const editForm = document.getElementById(`editForm${examId}`);
+            editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function cancelEdit(examId) {
+            document.getElementById(`editForm${examId}`).style.display = 'none';
+        }
+
+        async function saveExamChanges(examId) {
+            const title = document.getElementById(`editTitle${examId}`).value;
+            const durationMinutes = parseInt(document.getElementById(`editDuration${examId}`).value);
+            
+            if (!title.trim()) {
+                alert('Title cannot be empty');
+                return;
+            }
+            
+            if (durationMinutes < 1 || durationMinutes > 300) {
+                alert('Duration must be between 1 and 300 minutes');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/exams/${examId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, durationMinutes })
+                });
+                
+                if (response.ok) {
+                    alert('Exam updated successfully!');
+                    loadExamsForManagement();
+                } else {
+                    alert('Error updating exam');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to server');
+            }
+        }
+
+        async function deleteExam(examId) {
+            if (!confirm('Are you sure you want to delete this exam? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/exams/${examId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    alert('Exam deleted successfully!');
+                    loadExamsForManagement();
+                    loadResults(); // Refresh results in case any were affected
+                } else {
+                    alert('Error deleting exam');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to server');
+            }
+        }
+
+        async function deleteResult(resultId) {
+            if (!confirm('Are you sure you want to delete this result?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/results/${resultId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    alert('Result deleted successfully!');
+                    loadResults();
+                } else {
+                    alert('Error deleting result');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to server');
+            }
+        }
+
+        async function clearAllResults() {
+            if (!confirm('Are you sure you want to delete ALL results? This action cannot be undone.')) {
+                return;
+            }
+            
+            if (!confirm('This will permanently delete all exam results. Are you absolutely sure?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/results/clear-all', {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    alert('All results cleared successfully!');
+                    loadResults();
+                } else {
+                    alert('Error clearing results');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to server');
+            }
+        }
+
+        function goToHome() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,556 @@
+{
+  "title": "Azure Data Fundamentals (DP-900) - Exam B",
+  "durationMinutes": 50,
+  "questions": [
+    {
+      "question": "Which Azure service should you choose for a fully managed relational database with built-in HA and backups?",
+      "options": [
+        "Azure SQL Database",
+        "SQL Server on Azure VM",
+        "Azure Storage Accounts",
+        "Azure Functions"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure SQL Database is a managed PaaS service with built-in high availability and automated backups."
+    },
+    {
+      "question": "Which file format is columnar and optimized for analytics in a data lake?",
+      "options": [
+        "JSON",
+        "Parquet",
+        "CSV",
+        "TXT"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Parquet is a columnar storage format that reduces I/O and speeds up analytical queries."
+    },
+    {
+      "question": "Which service helps you discover and catalog data assets across Azure and beyond?",
+      "options": [
+        "Microsoft Purview",
+        "Azure Monitor",
+        "Azure Advisor",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Microsoft Purview provides data cataloging, discovery, classification, and lineage."
+    },
+    {
+      "question": "Which Azure service is best for processing big data using Apache Spark notebooks?",
+      "options": [
+        "Azure Databricks",
+        "Azure Container Apps",
+        "Azure Functions",
+        "Azure Key Vault"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure Databricks offers a managed Spark environment for ETL, ML, and analytics."
+    },
+    {
+      "question": "Which best describes semi-structured data?",
+      "options": [
+        "Data without any schema and only binary",
+        "Data with flexible schema like JSON",
+        "Strictly tabular data with fixed columns",
+        "Data only stored in images"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Semi-structured data (e.g., JSON) has flexible fields and nested structures."
+    },
+    {
+      "question": "Which statement about Azure Cosmos DB is true?",
+      "options": [
+        "It is only available in one region per account",
+        "It supports multiple APIs like SQL, Cassandra, and Gremlin",
+        "It requires manual sharding",
+        "It does not support throughput control"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Cosmos DB supports multiple APIs and provides global distribution with managed partitions and throughput."
+    },
+    {
+      "question": "Which Azure service allows on-demand T-SQL queries over files stored in a data lake?",
+      "options": [
+        "Azure Synapse Serverless SQL pool",
+        "Azure DevOps",
+        "Azure Logic Apps",
+        "Azure Virtual Machines"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Serverless SQL pool enables querying data in a lake without provisioning clusters."
+    },
+    {
+      "question": "Which storage service provides SMB protocol access for lift-and-shift file shares?",
+      "options": [
+        "Azure Files",
+        "Azure Blob Storage",
+        "Azure Queue Storage",
+        "Azure Table Storage"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure Files exposes SMB/NFS shares for applications and lift-and-shift scenarios."
+    },
+    {
+      "question": "Which is a key benefit of a star schema for BI?",
+      "options": [
+        "Fewer joins for common queries",
+        "Maximizes normalization",
+        "Only supports streaming data",
+        "Requires OLTP engines"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Star schemas reduce joins and simplify analytics with a central fact and denormalized dimensions."
+    },
+    {
+      "question": "Which Azure service provides near real-time analytics on streaming data using a SQL-like language?",
+      "options": [
+        "Azure Stream Analytics",
+        "Azure Policy",
+        "Azure Firewall",
+        "Azure Boards"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure Stream Analytics uses a SQL-like language to process data-in-motion."
+    },
+    {
+      "question": "Which concept refers to controlling which users can see which rows in a table?",
+      "options": [
+        "Transparent Data Encryption",
+        "Row-Level Security",
+        "Geo-replication",
+        "Auto-failover groups"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Row-Level Security restricts row visibility at query time based on predicates and user context."
+    },
+    {
+      "question": "Which file format is best for simple data interchange and human readability?",
+      "options": [
+        "CSV",
+        "Parquet",
+        "ORC",
+        "Avro"
+      ],
+      "correctAnswer": 0,
+      "explanation": "CSV is simple, human-readable, and widely supported for data interchange."
+    },
+    {
+      "question": "Which Azure service would you use to extract, load, and transform data with drag-and-drop flows?",
+      "options": [
+        "ADF Mapping Data Flows",
+        "Azure Monitor",
+        "Azure Bastion",
+        "Azure Virtual Desktop"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Mapping Data Flows in ADF provide a code-free experience for building Spark-based transformations."
+    },
+    {
+      "question": "Which best describes a data warehouse?",
+      "options": [
+        "A transactional system for point-of-sale",
+        "An analytical store optimized for aggregations and BI",
+        "A key-value store for caching",
+        "A file share for documents"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A data warehouse is optimized for analytics and BI, not for transactional workloads."
+    },
+    {
+      "question": "Which is a reason to choose Azure SQL Managed Instance over Azure SQL Database?",
+      "options": [
+        "You need full OS control",
+        "You need near 100% SQL Server compatibility including SQL Agent",
+        "You require a NoSQL document model",
+        "You must run Spark notebooks"
+      ],
+      "correctAnswer": 1,
+      "explanation": "SQL MI provides broad SQL Server compatibility including Agent and cross-database scenarios."
+    },
+    {
+      "question": "Which concept describes encryption of data while stored on disk?",
+      "options": [
+        "Encryption in transit",
+        "Encryption at rest",
+        "Data masking",
+        "Hashing only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Encryption at rest protects data on disk; in Azure SQL it is commonly achieved with TDE."
+    },
+    {
+      "question": "Which Azure service would you use to securely store connection strings and keys?",
+      "options": [
+        "Azure Key Vault",
+        "Azure Monitor",
+        "Azure Advisor",
+        "Azure Sentinel"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Key Vault securely stores secrets, keys, and certificates with audit and access control."
+    },
+    {
+      "question": "Which describes strong consistency?",
+      "options": [
+        "Reads may return stale data briefly",
+        "All reads reflect the most recent committed write",
+        "Data is never replicated",
+        "Latency is always lower than eventual consistency"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Strong consistency guarantees that reads see the latest committed write."
+    },
+    {
+      "question": "Which Azure service supports global distribution with multi-master writes?",
+      "options": [
+        "Azure SQL Database",
+        "Azure Cosmos DB",
+        "Azure Database for MySQL",
+        "Azure Cache for Redis"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Cosmos DB supports multi-region writes for low-latency global applications."
+    },
+    {
+      "question": "Which is a benefit of partitioning data in a data lake by date?",
+      "options": [
+        "Eliminates the need for ACLs",
+        "Improves query performance via partition pruning",
+        "Enables ACID transactions automatically",
+        "Disables compression"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Date partitioning allows engines to scan only relevant folders, reducing I/O and cost."
+    },
+    {
+      "question": "Which component of Power BI is used to author reports on a PC?",
+      "options": [
+        "Power BI Desktop",
+        "Power BI Service",
+        "Power BI Report Builder",
+        "Power BI Mobile"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Power BI Desktop is the Windows application used to model data and create reports."
+    },
+    {
+      "question": "Which Azure service provides massively parallel processing (MPP) for warehousing?",
+      "options": [
+        "Synapse Dedicated SQL pool",
+        "Synapse Serverless SQL pool",
+        "Azure Database for PostgreSQL",
+        "Azure Files"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Dedicated SQL pool is the MPP engine for enterprise-scale warehousing in Synapse."
+    },
+    {
+      "question": "Which is a typical use case for Azure Table Storage?",
+      "options": [
+        "Document storage for JSON with complex queries",
+        "Key/attribute lookups at scale with a NoSQL model",
+        "Running Spark jobs",
+        "Hosting SQL relational schemas"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Table Storage is a schemaless key/attribute store suitable for high-scale lookups."
+    },
+    {
+      "question": "Which Azure service is best for event ingestion from apps at very high throughput?",
+      "options": [
+        "Azure Event Hubs",
+        "Azure Queue Storage",
+        "Azure Service Bus Queues",
+        "Azure Files"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Event Hubs ingests telemetry/events at high throughput with low latency."
+    },
+    {
+      "question": "Which statement about data modeling for BI is correct?",
+      "options": [
+        "Highly normalized models reduce query complexity",
+        "A star schema simplifies analytics and often performs better",
+        "Graph databases are mandatory",
+        "No relationships should be defined"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Star schemas reduce complexity and improve performance for BI workloads."
+    },
+    {
+      "question": "Which service helps orchestrate and schedule data movement between sources/destinations?",
+      "options": [
+        "Azure Data Factory",
+        "Azure Policy",
+        "Azure Kubernetes Service",
+        "Azure Firewall"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ADF orchestrates copy activities, transformations, and scheduling across data stores."
+    },
+    {
+      "question": "Which storage type is recommended for storing raw data files for analytics?",
+      "options": [
+        "Azure Blob Storage / ADLS Gen2",
+        "Azure Files only",
+        "SQL Managed Instance",
+        "Azure Cache for Redis"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Data lakes on Blob/ADLS Gen2 are ideal for raw data ingestion and analytics."
+    },
+    {
+      "question": "Which security feature allows client-side encryption of selected columns in Azure SQL?",
+      "options": [
+        "Always Encrypted",
+        "TDE",
+        "RLS",
+        "Data Masking"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Always Encrypted protects sensitive data in use by encrypting columns on the client side."
+    },
+    {
+      "question": "Which consistency model usually provides the lowest read latency in Cosmos DB?",
+      "options": [
+        "Strong",
+        "Bounded staleness",
+        "Session/Eventual",
+        "Consistent prefix only"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Session or eventual consistency offers lower latency with relaxed guarantees."
+    },
+    {
+      "question": "Which describes a foreign key?",
+      "options": [
+        "A unique identifier for each row",
+        "A reference to a primary key in another table",
+        "An index for text search",
+        "A system-generated column"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A foreign key enforces referential integrity by referencing a primary key in another table."
+    },
+    {
+      "question": "Which service integrates with Synapse to run Spark-based notebooks?",
+      "options": [
+        "Synapse Apache Spark pools",
+        "Azure Container Apps",
+        "Azure Arc",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Synapse provides Apache Spark pools for data engineering and analytics."
+    },
+    {
+      "question": "Which governance practice helps ensure only necessary access is granted?",
+      "options": [
+        "Least privilege",
+        "Grant everyone Owner role",
+        "Disable auditing",
+        "Share account keys"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Least privilege restricts access to the minimal set of permissions required."
+    },
+    {
+      "question": "Which service turns streaming inputs into Power BI dashboards quickly?",
+      "options": [
+        "Azure Stream Analytics output to Power BI",
+        "Azure DevOps Pipelines",
+        "Azure Sentinel",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Stream Analytics can write directly to Power BI for near real-time visuals."
+    },
+    {
+      "question": "Which Azure storage option is most appropriate for hot path streaming analytics inputs?",
+      "options": [
+        "Event Hubs",
+        "Blob Archive tier",
+        "Azure Files",
+        "Table Storage"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Event Hubs is designed for hot-path streaming ingestion at scale."
+    },
+    {
+      "question": "Which statement about Purview classifications is true?",
+      "options": [
+        "They only apply to images",
+        "They can label sensitive data types across sources",
+        "They must be created per file manually",
+        "They disable lineage"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Purview can auto-apply classifications (e.g., PII) across scanned sources."
+    },
+    {
+      "question": "Which is a benefit of using managed identities with ADF to access storage?",
+      "options": [
+        "You must embed keys in pipelines",
+        "Rotations handled automatically; no secrets in code",
+        "Requires SSH keys on VMs",
+        "It disables RBAC"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Managed identities allow secure keyless authentication and automatic rotation."
+    },
+    {
+      "question": "Which format typically yields smaller scan costs for analytics in Synapse serverless?",
+      "options": [
+        "Uncompressed CSV",
+        "Parquet",
+        "Plain JSON",
+        "XML"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Parquet reduces bytes scanned leading to faster and cheaper queries."
+    },
+    {
+      "question": "Which store is best for hierarchical folder-like structure over big data?",
+      "options": [
+        "ADLS Gen2 (hierarchical namespace)",
+        "Queue Storage",
+        "Azure Files only",
+        "Azure DevTest Labs"
+      ],
+      "correctAnswer": 0,
+      "explanation": "ADLS Gen2 supports a hierarchical namespace with directories and ACLs."
+    },
+    {
+      "question": "Which is the best choice for BI semantic models shared across an organization?",
+      "options": [
+        "Power BI datasets in Power BI Service",
+        "Local Excel files",
+        "Raw CSVs in Blob",
+        "Notebook variables"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Power BI datasets provide a governed semantic layer with RLS, measures, and reuse."
+    },
+    {
+      "question": "Which describes the purpose of indexes in relational databases?",
+      "options": [
+        "Speed up query performance by optimizing lookups",
+        "Encrypt data at rest",
+        "Replace primary keys",
+        "Enable streaming ingestion"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Indexes accelerate reads by organizing data for faster lookups and scans."
+    },
+    {
+      "question": "Which option helps prevent data exfiltration from a storage account?",
+      "options": [
+        "Allow public access from any network",
+        "Use private endpoints and disable public network access",
+        "Share SAS tokens broadly",
+        "Turn off encryption"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Private endpoints and blocking public access reduce exposure to exfiltration."
+    },
+    {
+      "question": "Which type of workload is best suited for Synapse serverless SQL?",
+      "options": [
+        "Point-in-time transactional updates",
+        "Ad-hoc exploration over files in the lake",
+        "Running high-throughput OLTP",
+        "Hosting a web app"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Serverless SQL shines for ad-hoc queries over data lake files without provisioning clusters."
+    },
+    {
+      "question": "Which ingestion technology is recommended for capturing website clickstream events?",
+      "options": [
+        "Event Hubs",
+        "Azure Files",
+        "SQL Managed Instance",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Event Hubs handles high-volume event streams like clickstream data."
+    },
+    {
+      "question": "Which database model is best for flexible nested documents?",
+      "options": [
+        "Relational",
+        "Document store",
+        "Key-value",
+        "Graph only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Document databases support flexible nested structures like JSON."
+    },
+    {
+      "question": "Which describes the main goal of data governance?",
+      "options": [
+        "Reduce storage costs only",
+        "Ensure availability only",
+        "Establish policies, quality, and control over data usage",
+        "Disable security to speed access"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Governance sets policies for quality, security, and proper data usage across the organization."
+    },
+    {
+      "question": "Which best fits a key-value store use case?",
+      "options": [
+        "Complex joins and aggregations",
+        "Low-latency lookups by key",
+        "Graph traversals",
+        "Time-series aggregations"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Key-value stores are optimized for simple, fast lookups by key."
+    },
+    {
+      "question": "Which choice helps ensure consistent environments for data pipelines?",
+      "options": [
+        "Infrastructure as Code (IaC) for data resources",
+        "Manual portal configuration only",
+        "Hard-coded secrets",
+        "No version control"
+      ],
+      "correctAnswer": 0,
+      "explanation": "IaC templates provide repeatability and versioning for data resources and pipelines."
+    },
+    {
+      "question": "Which statement about analytics workloads is correct? (50)",
+      "options": [
+        "They prioritize short transactions and frequent updates",
+        "They emphasize aggregations and scans over large datasets",
+        "They cannot run in the cloud",
+        "They require no data modeling"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Analytics workloads focus on aggregations and scans across large volumes of data for insights."
+    },
+    {
+      "question": "Which Azure data service is most suitable for storing time-series data generated by IoT sensors at high ingestion rates?",
+      "options": [
+        "Azure Data Lake Storage",
+        "Azure SQL Database",
+        "Azure Cosmos DB with the Time Series Insights connector",
+        "Azure Files"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Cosmos DB combined with Time Series Insights is optimized for managing, querying, and analyzing large volumes of time-series IoT data."
+  },
+  {
+    "question": "Which Azure feature allows you to enforce data residency and compliance rules by restricting where specific data can be stored or processed?",
+    "options": [
+      "Azure Policy",
+      "Azure Monitor",
+      "Azure Advisor",
+      "Azure Arc"
+    ],
+    "correctAnswer": 0,
+    "explanation": "Azure Policy enables governance controls such as enforcing data residency, resource configurations, and compliance rules."
+  }
+  ]
+}

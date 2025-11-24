@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master IA Exam System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%93%9D%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Master IA Exam System 📝</h1>
+        
+        <!-- Login Form -->
+        <div id="loginSection">
+            <div class="login-form">
+                <h2>Welcome</h2>
+                <div class="form-group">
+                    <label for="userName">Enter your name:</label>
+                    <input type="text" id="userName" placeholder="Your full name" required>
+                </div>
+                <button onclick="login()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Exam Selection -->
+        <div id="examSelectionSection" class="hidden">
+            <div class="exam-selection">
+                <h2>Hello, <span id="userNameDisplay"></span>!</h2>
+                <h3>Select an exam:</h3>
+                <ul id="examList" class="exam-list"></ul>
+                <div class="exam-actions">
+                    <button class="small-button" onclick="changeName()">Change Name</button>
+                    <button class="small-button" onclick="logoutUser()">Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Taking -->
+        <div id="examSection" class="hidden">
+            <div class="exam-container">
+                <div id="timerContainer" class="timer-container">
+                    <span class="timer-label">⏱️ Time remaining:</span>
+                    <span id="timerDisplay" class="timer-display">--:--</span>
+                </div>
+                <h2 id="examTitle"></h2>
+                
+                <!-- Question Navigator -->
+                <div class="question-navigator">
+                    <div id="questionButtons" class="question-buttons"></div>
+                </div>
+                
+                <!-- Single Question Display -->
+                <div id="currentQuestionContainer" class="current-question"></div>
+                
+                <!-- Navigation Controls -->
+                <div class="exam-controls">
+                    <button id="prevButton" onclick="previousQuestion()" class="nav-button">← Previous</button>
+                    <button id="flagButton" onclick="toggleFlag()" class="flag-button">🚩 Flag for Review</button>
+                    <button id="nextButton" onclick="nextQuestion()" class="nav-button">Next →</button>
+                </div>
+                
+                <button onclick="submitExam()" class="submit-exam-button">Submit Exam</button>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsSection" class="hidden">
+            <h2>Exam Results</h2>
+            <div class="result-summary">
+                <p><strong>Student:</strong> <span id="resultUserName"></span></p>
+                <p><strong>Exam:</strong> <span id="resultExamTitle"></span></p>
+                <div class="score" id="score"></div>
+                <p id="scoreText"></p>
+            </div>
+            <div id="detailedResults"></div>
+            <button onclick="downloadReport()">📥 Download Report</button>
+            <button onclick="backToExamSelection()">Take Another Exam</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = '';
+        let currentExam = null;
+        let exams = [];
+        let currentResult = null;
+        let currentAnswers = [];
+        let examTimer = null;
+        let timeRemaining = 0;
+        let currentQuestionIndex = 0;
+        let flaggedQuestions = [];
+
+        // ==== Cookie Utilities ====
+        function setCookie(name, value, minutes) {
+            const expires = minutes ? 
+                ";expires=" + new Date(Date.now() + minutes*60000).toUTCString() : "";
+            document.cookie = name + "=" + encodeURIComponent(value) + expires + ";path=/";
+        }
+        function getCookie(name) {
+            const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? decodeURIComponent(match[2]) : null;
+        }
+        function eraseCookie(name) {
+            document.cookie = name + '=; Max-Age=0; path=/';
+        }
+
+        // ==== Initialization from cookies ====
+        window.addEventListener('load', () => {
+            // Restore user name
+            const savedUser = getCookie('examUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('examSelectionSection').classList.remove('hidden');
+                document.getElementById('userNameDisplay').textContent = currentUser;
+                loadExams().then(() => restoreExamIfAny());
+            } else {
+                loadExams();
+            }
+        });
+
+        function restoreExamIfAny() {
+            const stateRaw = getCookie('examState');
+            if (!stateRaw) return;
+            let state;
+            try { state = JSON.parse(stateRaw); } catch { return; }
+            // Fetch exam again to rebuild UI
+            fetch('/api/exams/' + state.examId)
+                .then(r => r.json())
+                .then(exam => {
+                    currentExam = exam;
+                    currentAnswers = state.answers || new Array(exam.questions.length).fill(-1);
+                    flaggedQuestions = state.flags || [];
+                    document.getElementById('examSelectionSection').classList.add('hidden');
+                    document.getElementById('examSection').classList.remove('hidden');
+                    document.getElementById('examTitle').textContent = currentExam.title;
+                    displayQuestions();
+                    // Compute remaining time
+                    const duration = currentExam.durationMinutes || 30;
+                    const elapsedSeconds = Math.floor(Date.now()/1000) - state.startEpoch;
+                    timeRemaining = duration*60 - elapsedSeconds;
+                    if (timeRemaining <= 0) {
+                        submitExam(true);
+                    } else {
+                        startTimer(true); // resume mode
+                    }
+                })
+                .catch(err => console.error('Restore exam failed', err));
+        }
+
+        async function loadExams() {
+            try {
+                const response = await fetch('/api/exams');
+                exams = await response.json();
+                displayExamList();
+            } catch (error) {
+                console.error('Error loading exams:', error);
+            }
+        }
+
+        function login() {
+            const userName = document.getElementById('userName').value.trim();
+            if (userName) {
+                currentUser = userName;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('examSelectionSection').classList.remove('hidden');
+                document.getElementById('userNameDisplay').textContent = currentUser;
+                setCookie('examUser', currentUser, 60*24); // store for 24h
+                loadExams();
+            } else {
+                alert('Please enter your name');
+            }
+        }
+
+        function displayExamList() {
+            const examList = document.getElementById('examList');
+            examList.innerHTML = '';
+            exams.forEach(exam => {
+                const li = document.createElement('li');
+                li.className = 'exam-item';
+                const duration = exam.durationMinutes || 30;
+                li.innerHTML = `
+                    <div>
+                        <strong>${exam.title}</strong>
+                        <p>${exam.questions.length} questions • ${duration} minutes</p>
+                    </div>
+                    <button onclick="startExam(${exam.id})">Start</button>
+                `;
+                examList.appendChild(li);
+            });
+        }
+
+        async function startExam(examId) {
+            try {
+                const response = await fetch(`/api/exams/${examId}`);
+                currentExam = await response.json();
+                
+                document.getElementById('examSelectionSection').classList.add('hidden');
+                document.getElementById('examSection').classList.remove('hidden');
+                document.getElementById('examTitle').textContent = currentExam.title;
+                
+                // Initialize state
+                currentAnswers = new Array(currentExam.questions.length).fill(-1);
+                flaggedQuestions = [];
+                currentQuestionIndex = 0;
+                
+                displayQuestions();
+                
+                // Persist exam start
+                const state = {
+                    examId: currentExam.id,
+                    startEpoch: Math.floor(Date.now()/1000),
+                    answers: currentAnswers,
+                    flags: flaggedQuestions
+                };
+                setCookie('examState', JSON.stringify(state));
+                startTimer(false);
+            } catch (error) {
+                console.error('Error loading exam:', error);
+            }
+        }
+
+        function startTimer(resume) {
+            if (examTimer) {
+                clearInterval(examTimer);
+            }
+            
+            if (!resume) {
+                const duration = currentExam.durationMinutes || 30;
+                timeRemaining = duration * 60;
+            }
+            
+            updateTimerDisplay();
+            
+            examTimer = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(examTimer);
+                    alert('⏰ Time is up! Your exam will be submitted automatically.');
+                    submitExam(true); // auto submission skips confirmation
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timerDisplay');
+            timerElement.textContent = display;
+            
+            // Change color when time is running out
+            if (timeRemaining <= 60) {
+                timerElement.classList.add('timer-warning');
+            } else if (timeRemaining <= 300) {
+                timerElement.classList.add('timer-alert');
+            } else {
+                timerElement.classList.remove('timer-warning', 'timer-alert');
+            }
+        }
+
+        function displayQuestions() {
+            currentQuestionIndex = 0;
+            buildQuestionNavigator();
+            displayCurrentQuestion();
+        }
+
+        function buildQuestionNavigator() {
+            const container = document.getElementById('questionButtons');
+            container.innerHTML = '';
+            
+            currentExam.questions.forEach((question, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'question-nav-btn';
+                btn.textContent = idx + 1;
+                btn.onclick = () => goToQuestion(idx);
+                btn.id = `qnav-${idx}`;
+                container.appendChild(btn);
+            });
+            updateNavigatorStatus();
+        }
+
+        function displayCurrentQuestion() {
+            const container = document.getElementById('currentQuestionContainer');
+            const question = currentExam.questions[currentQuestionIndex];
+            
+            let optionsHtml = '<ul class="options">';
+            question.options.forEach((option, oIndex) => {
+                const checked = currentAnswers[currentQuestionIndex] === oIndex ? 'checked' : '';
+                optionsHtml += `
+                    <li class="option">
+                        <label>
+                            <input type="radio" name="currentQuestion" value="${oIndex}" ${checked} onchange="onAnswerSelected(${currentQuestionIndex}, ${oIndex})">
+                            ${option}
+                        </label>
+                    </li>
+                `;
+            });
+            optionsHtml += '</ul>';
+            
+            container.innerHTML = `
+                <div class="question">
+                    <h3>Question ${currentQuestionIndex + 1} of ${currentExam.questions.length}</h3>
+                    <p>${question.question}</p>
+                    ${optionsHtml}
+                </div>
+            `;
+            
+            updateNavigationButtons();
+            updateNavigatorStatus();
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prevButton').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextButton').disabled = currentQuestionIndex === currentExam.questions.length - 1;
+            
+            const flagBtn = document.getElementById('flagButton');
+            if (flaggedQuestions.includes(currentQuestionIndex)) {
+                flagBtn.classList.add('flagged');
+                flagBtn.innerHTML = '🚩 Flagged';
+            } else {
+                flagBtn.classList.remove('flagged');
+                flagBtn.innerHTML = '🚩 Flag for Review';
+            }
+        }
+
+        function updateNavigatorStatus() {
+            currentExam.questions.forEach((q, idx) => {
+                const btn = document.getElementById(`qnav-${idx}`);
+                if (!btn) return;
+                
+                btn.classList.remove('answered', 'current', 'flagged');
+                
+                if (idx === currentQuestionIndex) {
+                    btn.classList.add('current');
+                }
+                if (currentAnswers[idx] !== undefined && currentAnswers[idx] >= 0) {
+                    btn.classList.add('answered');
+                }
+                if (flaggedQuestions.includes(idx)) {
+                    btn.classList.add('flagged');
+                }
+            });
+        }
+
+        function goToQuestion(index) {
+            currentQuestionIndex = index;
+            displayCurrentQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayCurrentQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentExam.questions.length - 1) {
+                currentQuestionIndex++;
+                displayCurrentQuestion();
+            }
+        }
+
+        function toggleFlag() {
+            const idx = flaggedQuestions.indexOf(currentQuestionIndex);
+            if (idx > -1) {
+                flaggedQuestions.splice(idx, 1);
+            } else {
+                flaggedQuestions.push(currentQuestionIndex);
+            }
+            updateNavigationButtons();
+            updateNavigatorStatus();
+            updateExamStateCookie();
+        }
+
+        function onAnswerSelected(qIndex, answerIndex) {
+            currentAnswers[qIndex] = answerIndex;
+            updateNavigatorStatus();
+            updateExamStateCookie();
+        }
+
+        function updateExamStateCookie() {
+            const stateRaw = getCookie('examState');
+            if (stateRaw) {
+                try {
+                    const state = JSON.parse(stateRaw);
+                    state.answers = currentAnswers;
+                    state.flags = flaggedQuestions;
+                    setCookie('examState', JSON.stringify(state));
+                } catch(e) { /* ignore */ }
+            }
+        }
+
+        async function submitExam(auto=false) {
+            // Stop timer
+            if (examTimer) {
+                clearInterval(examTimer);
+                examTimer = null;
+            }
+            
+            // Use currentAnswers array instead of reading from DOM
+            const answers = [...currentAnswers];
+            let correct = 0;
+            let unanswered = 0;
+            
+            currentExam.questions.forEach((question, index) => {
+                const userAnswer = answers[index];
+                if (userAnswer === -1) unanswered++;
+                if (userAnswer === question.correctAnswer) {
+                    correct++;
+                }
+            });
+
+            if (!auto && unanswered > 0) {
+                const proceed = confirm(`There are ${unanswered} unanswered question(s). Do you want to submit anyway? (OK = submit, Cancel = return to exam)`);
+                if (!proceed) {
+                    // Restart timer if time remaining
+                    if (timeRemaining > 0) startTimer(true);
+                    return; // return to exam
+                }
+            }
+
+            const score = (correct / currentExam.questions.length) * 100;
+            
+            const result = {
+                userName: currentUser,
+                examId: currentExam.id,
+                examTitle: currentExam.title,
+                answers: answers,
+                score: score,
+                correctAnswers: correct,
+                totalQuestions: currentExam.questions.length
+            };
+
+            currentResult = result;
+            currentAnswers = answers;
+
+            try {
+                await fetch('/api/results', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(result)
+                });
+            } catch (error) {
+                console.error('Error saving results:', error);
+            }
+
+            displayResults(result, answers);
+            eraseCookie('examState');
+        }
+
+        // === User name & logout controls ===
+        function logoutUser() {
+            eraseCookie('examUser');
+            eraseCookie('examState');
+            currentUser = '';
+            currentExam = null;
+            currentAnswers = [];
+            flaggedQuestions = [];
+            currentQuestionIndex = 0;
+            if (examTimer) { clearInterval(examTimer); examTimer = null; }
+            document.getElementById('examSection').classList.add('hidden');
+            document.getElementById('examSelectionSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('userName').value = '';
+        }
+
+        function changeName() {
+            const newName = prompt('Enter new name:', currentUser);
+            if (newName && newName.trim()) {
+                currentUser = newName.trim();
+                setCookie('examUser', currentUser, 60*24);
+                document.getElementById('userNameDisplay').textContent = currentUser;
+            }
+        }
+
+        function displayResults(result, answers) {
+            document.getElementById('examSection').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+            
+            document.getElementById('resultUserName').textContent = result.userName;
+            document.getElementById('resultExamTitle').textContent = result.examTitle;
+            document.getElementById('score').textContent = `${result.score.toFixed(1)}%`;
+            document.getElementById('scoreText').textContent = 
+                `${result.correctAnswers} out of ${result.totalQuestions} correct answers`;
+            
+            const detailedResults = document.getElementById('detailedResults');
+            detailedResults.innerHTML = '';
+            
+            currentExam.questions.forEach((question, index) => {
+                const userAnswer = answers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                
+                resultDiv.innerHTML = `
+                    <h4>Question ${index + 1}: ${question.question}</h4>
+                    <div class="answer your-answer">
+                        <strong>Your answer:</strong> 
+                        ${userAnswer >= 0 ? question.options[userAnswer] : 'Not answered'}
+                        ${isCorrect ? '✓' : '✗'}
+                    </div>
+                    ${!isCorrect ? `
+                        <div class="answer correct-answer">
+                            <strong>Correct answer:</strong> ${question.options[question.correctAnswer]}
+                        </div>
+                    ` : ''}
+                    <div class="explanation">
+                        <strong>Explanation:</strong> ${question.explanation}
+                    </div>
+                `;
+                
+                detailedResults.appendChild(resultDiv);
+            });
+        }
+
+        function downloadReport() {
+            if (!currentResult || !currentExam) return;
+
+            let reportMd = `# Exam Report\n\n`;
+            reportMd += `---\n\n`;
+            reportMd += `**Student:** ${currentResult.userName}  \n`;
+            reportMd += `**Exam:** ${currentResult.examTitle}  \n`;
+            reportMd += `**Date:** ${new Date().toLocaleString()}  \n`;
+            reportMd += `**Score:** ${currentResult.score.toFixed(1)}%  \n`;
+            reportMd += `**Correct Answers:** ${currentResult.correctAnswers} out of ${currentResult.totalQuestions}\n\n`;
+            reportMd += `---\n\n`;
+
+            currentExam.questions.forEach((question, index) => {
+                const userAnswer = currentAnswers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+
+                reportMd += `## Question ${index + 1}\n\n`;
+                reportMd += `**${question.question}**\n\n`;
+                reportMd += `### Your Answer\n`;
+                reportMd += `${userAnswer >= 0 ? question.options[userAnswer] : 'Not answered'} ${isCorrect ? '✅ CORRECT' : '❌ INCORRECT'}\n\n`;
+                
+                if (!isCorrect) {
+                    reportMd += `### Correct Answer\n`;
+                    reportMd += `${question.options[question.correctAnswer]}\n\n`;
+                }
+                
+                reportMd += `### Explanation\n`;
+                reportMd += `${question.explanation}\n\n`;
+                reportMd += `---\n\n`;
+            });
+
+            const blob = new Blob([reportMd], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `exam_report_${currentResult.userName}_${new Date().getTime()}.md`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function backToExamSelection() {
+            document.getElementById('resultsSection').classList.add('hidden');
+            document.getElementById('examSelectionSection').classList.remove('hidden');
+            currentResult = null;
+            currentAnswers = [];
+            loadExams();
+        }
+    </script>
+</body>
+</html>

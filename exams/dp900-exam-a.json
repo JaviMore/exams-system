@@ -1,0 +1,556 @@
+{
+  "title": "Azure Data Fundamentals (DP-900) - Exam A",
+  "durationMinutes": 50,
+  "questions": [
+    {
+      "question": "Which workload best fits an OLTP system?",
+      "options": [
+        "High-frequency inserts and small updates for many users",
+        "Complex aggregations over petabytes of data",
+        "Long-running batch transformations",
+        "Training deep learning models"
+      ],
+      "correctAnswer": 0,
+      "explanation": "OLTP handles transactional operations with many concurrent users performing inserts/updates on small amounts of data."
+    },
+    {
+      "question": "Which statement best describes OLAP?",
+      "options": [
+        "Row-oriented transaction processing",
+        "Analytics and aggregated queries over large datasets",
+        "Key-value lookups at low latency",
+        "Schema-free document updates"
+      ],
+      "correctAnswer": 1,
+      "explanation": "OLAP focuses on analytics, aggregations, and read-heavy workloads across large volumes of data."
+    },
+    {
+      "question": "Which Azure service is designed for globally distributed, multi-model NoSQL data?",
+      "options": [
+        "Azure SQL Managed Instance",
+        "Azure Cosmos DB",
+        "Azure Database for PostgreSQL",
+        "Azure Database for MySQL"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Azure Cosmos DB provides global distribution, multi-model APIs, and single-digit millisecond latencies."
+    },
+    {
+      "question": "What is a primary benefit of using a columnar storage format like Parquet for analytics?",
+      "options": [
+        "Faster row-wise updates",
+        "Better performance for aggregations and compression",
+        "Built-in ACID transactions",
+        "Native support for graph queries"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Columnar formats enable efficient compression and scanning for analytical queries on selected columns."
+    },
+    {
+      "question": "Which Azure storage option is most suitable for storing large unstructured data such as images or logs?",
+      "options": [
+        "Azure Files",
+        "Azure Table Storage",
+        "Azure Blob Storage",
+        "Azure Queue Storage"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Azure Blob Storage is optimized for massive unstructured data like images, video, and log files."
+    },
+    {
+      "question": "Which statement describes structured data?",
+      "options": [
+        "Data with a rigid schema typically stored in tables",
+        "Free-form binary data with no schema",
+        "Data stored only in CSV files",
+        "Data that cannot be queried with SQL"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Structured data follows a well-defined schema, often stored in relational tables."
+    },
+    {
+      "question": "Which pairing correctly matches a non-relational model with its description?",
+      "options": [
+        "Wide-column: graph vertices and edges",
+        "Document: JSON-like objects with flexible fields",
+        "Key-value: fixed relational schema",
+        "Graph: data stored only in tables"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Document databases store JSON-like documents with flexible fields and nested structures."
+    },
+    {
+      "question": "Which Azure service provides serverless SQL analytics over data in a data lake?",
+      "options": [
+        "Azure SQL Database Hyperscale",
+        "Azure Synapse Serverless SQL pool",
+        "Azure Databricks Jobs",
+        "Azure Stream Analytics"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Synapse serverless SQL pool allows on-demand SQL queries directly over files in the data lake."
+    },
+    {
+      "question": "Which statement best describes a data lake?",
+      "options": [
+        "A highly normalized relational warehouse",
+        "A repository for raw, structured and unstructured data at any scale",
+        "A transactional system for point-of-sale operations",
+        "A streaming ingestion service"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A data lake stores raw data of various types and structures for later processing and analytics."
+    },
+    {
+      "question": "Which service is used to orchestrate data movement and transformation pipelines in Azure?",
+      "options": [
+        "Azure Data Factory",
+        "Azure Monitor",
+        "Azure Virtual Network",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure Data Factory builds, schedules, and orchestrates data integration pipelines (ETL/ELT)."
+    },
+    {
+      "question": "Which is a benefit of partitioning in a big data table?",
+      "options": [
+        "Eliminates the need for indexing",
+        "Reduces query scope by pruning data segments",
+        "Automatically encrypts data at rest",
+        "Guarantees ACID transactions"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Partitioning allows queries to scan only relevant partitions, improving performance and cost."
+    },
+    {
+      "question": "Which Cosmos DB API is used for graph data?",
+      "options": [
+        "Table API",
+        "SQL (Core) API",
+        "Gremlin API",
+        "Cassandra API"
+      ],
+      "correctAnswer": 2,
+      "explanation": "The Gremlin API supports graph models with vertices and edges."
+    },
+    {
+      "question": "What is a primary use case for Azure Stream Analytics?",
+      "options": [
+        "Scheduling nightly batch transformations",
+        "Real-time analytics over data streams",
+        "Managing relational indexes",
+        "Serving a BI semantic model"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Stream Analytics processes data-in-motion from sources like Event Hubs with low-latency analytics."
+    },
+    {
+      "question": "Which best describes batch processing?",
+      "options": [
+        "Processing data continuously as it arrives",
+        "Processing data in scheduled, discrete jobs",
+        "Only processing streaming telemetry",
+        "Processing data exclusively with SQL"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Batch processing runs at scheduled intervals over accumulated data sets."
+    },
+    {
+      "question": "Which service would you choose for a fully managed relational database with minimal administration?",
+      "options": [
+        "Azure SQL Database",
+        "SQL Server on Azure VM",
+        "Azure Kubernetes Service",
+        "Azure Functions"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure SQL Database is a managed PaaS relational service that reduces administrative overhead."
+    },
+    {
+      "question": "Which is a benefit of Azure Cosmos DB’s multiple consistency models?",
+      "options": [
+        "They remove the need for backups",
+        "They allow trade-offs between latency and consistency",
+        "They enforce ACID across all regions",
+        "They disable global distribution"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Cosmos DB lets you choose consistency levels to balance performance and data guarantees."
+    },
+    {
+      "question": "Which Azure service catalogs data assets and lineage for governance?",
+      "options": [
+        "Microsoft Purview",
+        "Azure Key Vault",
+        "Azure Policy",
+        "Azure Monitor"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Microsoft Purview provides data discovery, classification, lineage, and governance."
+    },
+    {
+      "question": "Which file format is row-oriented and commonly used for simple exchanges?",
+      "options": [
+        "CSV",
+        "Parquet",
+        "ORC",
+        "Avro"
+      ],
+      "correctAnswer": 0,
+      "explanation": "CSV is a row-oriented, simple text format widely used for data interchange."
+    },
+    {
+      "question": "Which feature helps secure secrets such as connection strings in Azure?",
+      "options": [
+        "Azure Active Directory Groups",
+        "Azure Key Vault",
+        "Azure Advisor",
+        "Azure Bastion"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Azure Key Vault stores and manages secrets, keys, and certificates securely."
+    },
+    {
+      "question": "Which statement describes normalization in relational databases?",
+      "options": [
+        "Combines tables to reduce joins",
+        "Reduces redundancy and improves data integrity",
+        "Stores JSON documents without schema",
+        "Ensures encryption at rest"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Normalization organizes data to minimize redundancy and maintain integrity."
+    },
+    {
+      "question": "Which service can run Apache Spark for data engineering on Azure?",
+      "options": [
+        "Azure Databricks",
+        "Azure Functions",
+        "Azure DevOps",
+        "Azure Firewalls"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Azure Databricks provides a managed Spark platform for ETL, ML, and analytics."
+    },
+    {
+      "question": "Which statement about Azure Data Lake Storage Gen2 is correct?",
+      "options": [
+        "Only supports block blobs",
+        "Adds a hierarchical namespace for directories and ACLs",
+        "Is a managed relational database",
+        "Requires on-premises hardware"
+      ],
+      "correctAnswer": 1,
+      "explanation": "ADLS Gen2 offers a hierarchical namespace enabling directories and fine-grained ACLs."
+    },
+    {
+      "question": "Which security feature masks sensitive columns on query results?",
+      "options": [
+        "Transparent Data Encryption (TDE)",
+        "Dynamic Data Masking",
+        "Always Encrypted",
+        "BitLocker"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Dynamic Data Masking hides sensitive data in query results for non-privileged users."
+    },
+    {
+      "question": "Which is a characteristic of a star schema in a data warehouse?",
+      "options": [
+        "Highly normalized dimension tables",
+        "Fact table linked to denormalized dimensions",
+        "Only one table with all data",
+        "No foreign keys"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Star schema uses a central fact table and denormalized dimension tables for efficient analytics."
+    },
+    {
+      "question": "Which Azure service provides event ingestion at scale for telemetry?",
+      "options": [
+        "Azure Event Hubs",
+        "Azure Queue Storage",
+        "Azure Service Bus",
+        "Azure Monitor Logs"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Event Hubs ingests large volumes of telemetry and streaming events with low latency."
+    },
+    {
+      "question": "Which Power BI component hosts datasets, reports, and dashboards in the cloud?",
+      "options": [
+        "Power BI Desktop",
+        "Power BI Service",
+        "Power BI Report Builder",
+        "Power BI Mobile"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Power BI Service is the SaaS platform for publishing and sharing datasets, reports, and dashboards."
+    },
+    {
+      "question": "Which best practice reduces costs when querying large files in a data lake with serverless SQL?",
+      "options": [
+        "Use many small CSV files",
+        "Store data in Parquet and partition folders",
+        "Disable partitioning",
+        "Use uncompressed JSON"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Parquet plus partitioning reduces scanned data volume, lowering cost and improving performance."
+    },
+    {
+      "question": "Which Azure SQL feature encrypts data at rest automatically?",
+      "options": [
+        "Always Encrypted",
+        "Dynamic Data Masking",
+        "Transparent Data Encryption (TDE)",
+        "Row-Level Security"
+      ],
+      "correctAnswer": 2,
+      "explanation": "TDE encrypts database files at rest without application changes."
+    },
+    {
+      "question": "Which access control model assigns permissions via roles?",
+      "options": [
+        "ABAC",
+        "RBAC",
+        "MAC",
+        "DAC"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Role-Based Access Control (RBAC) grants permissions based on assigned roles."
+    },
+    {
+      "question": "Which Azure service provides serverless real-time dashboards from streaming data?",
+      "options": [
+        "Azure Stream Analytics output to Power BI",
+        "Azure Virtual Desktop",
+        "Azure Arc",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Stream Analytics can output directly to Power BI for near real-time dashboards."
+    },
+    {
+      "question": "Which is a benefit of using a managed PaaS database instead of IaaS?",
+      "options": [
+        "Full OS control and patching",
+        "Reduced administration with automated backups and updates",
+        "Ability to install custom kernel modules",
+        "You must manage high availability yourself"
+      ],
+      "correctAnswer": 1,
+      "explanation": "PaaS reduces admin overhead with built-in HA, backups, and automated updates."
+    },
+    {
+      "question": "Which term refers to the probability that a system is operational (e.g., 99.99%)?",
+      "options": [
+        "RTO",
+        "RPO",
+        "SLA availability",
+        "MTBF only"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Availability is often expressed in an SLA percentage indicating expected uptime."
+    },
+    {
+      "question": "Which describes RPO (Recovery Point Objective)?",
+      "options": [
+        "Maximum tolerable downtime",
+        "Maximum tolerable data loss",
+        "Time to detect an incident",
+        "Guaranteed throughput"
+      ],
+      "correctAnswer": 1,
+      "explanation": "RPO defines how much data loss (in time) is acceptable after a disruption."
+    },
+    {
+      "question": "Which is a recommended way to secure storage accounts at the network layer?",
+      "options": [
+        "Public access from any network",
+        "Use Private Endpoints or service endpoints",
+        "Disable HTTPS",
+        "Store keys in application code"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Private Endpoints and service endpoints restrict access to trusted networks/subnets."
+    },
+    {
+      "question": "Which service would you use to build a semantic model for BI over multiple sources?",
+      "options": [
+        "Power BI dataset",
+        "Azure Data Factory",
+        "Azure Policy",
+        "Azure Bastion"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Power BI datasets provide a semantic model with relationships, measures, and row-level security."
+    },
+    {
+      "question": "Which Cosmos DB feature helps achieve low latency across regions?",
+      "options": [
+        "Vertical scaling only",
+        "Multi-region writes and replication",
+        "Fixed schema enforcement",
+        "Table joins"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Global distribution with multi-region writes replicates data close to users for low latency."
+    },
+    {
+      "question": "Which is a characteristic of Azure SQL elastic pools?",
+      "options": [
+        "Dedicated compute per database only",
+        "Shared compute resources across multiple databases",
+        "Only supports MySQL",
+        "Requires VMs for hosting"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Elastic pools allow several databases to share compute resources, optimizing cost for variable usage."
+    },
+    {
+      "question": "Which ingestion option best fits streaming telemetry from IoT devices?",
+      "options": [
+        "Azure Event Hubs or IoT Hub",
+        "Azure Files",
+        "Azure DevOps",
+        "Azure VPN Gateway"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Event Hubs and IoT Hub handle high-ingestion streaming scenarios from devices and apps."
+    },
+    {
+      "question": "Which option is commonly used to enforce fine-grained access in SQL tables?",
+      "options": [
+        "Row-Level Security (RLS)",
+        "Only firewall rules",
+        "System-assigned managed identity",
+        "Local admin accounts"
+      ],
+      "correctAnswer": 0,
+      "explanation": "RLS filters rows at query time based on user context for fine-grained data access."
+    },
+    {
+      "question": "Which file format is self-describing and row-oriented, often used in streaming pipelines?",
+      "options": [
+        "Avro",
+        "Parquet",
+        "ORC",
+        "PNG"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Avro is self-describing and efficient for row-wise serialization and streaming use cases."
+    },
+    {
+      "question": "Which Synapse component provides dedicated MPP data warehousing?",
+      "options": [
+        "Dedicated SQL pool",
+        "Serverless SQL pool",
+        "Pipelines (ADF)",
+        "Integration Runtime"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Dedicated SQL pool is the MPP engine for enterprise data warehousing workloads."
+    },
+    {
+      "question": "Which best practice helps minimize data exfiltration risks from storage accounts?",
+      "options": [
+        "Allow public anonymous access to containers",
+        "Use private endpoints and disable public network access",
+        "Share account keys widely",
+        "Disable encryption"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Private endpoints and disabling public access reduce attack surface and data exfiltration risks."
+    },
+    {
+      "question": "Which describes denormalization in a warehouse context?",
+      "options": [
+        "Splitting tables into many third-normal-form entities",
+        "Combining data to reduce joins and improve read performance",
+        "Enforcing strict referential integrity",
+        "Only storing JSON documents"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Denormalization reduces joins for faster analytical reads at the cost of some redundancy."
+    },
+    {
+      "question": "Which is a benefit of managed identities for Azure services?",
+      "options": [
+        "Hard-coding credentials in code",
+        "Password rotation by developers",
+        "Credential-less authentication to other Azure services",
+        "Requires user-managed certificates only"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Managed identities provide a secure, credential-less way for services to authenticate to Azure resources."
+    },
+    {
+      "question": "Which statement about Azure Queue Storage is correct?",
+      "options": [
+        "Stores large binary objects like videos",
+        "Stores messages for decoupled communication",
+        "Provides relational tables",
+        "Runs Spark notebooks"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Azure Queue Storage is used for message-based communication between components."
+    },
+    {
+      "question": "Which service can discover sensitive data across your estate and apply classifications?",
+      "options": [
+        "Microsoft Purview",
+        "Azure Advisor",
+        "Azure Arc",
+        "Azure DevTest Labs"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Purview scans data sources, discovers sensitive data, and applies classifications for governance."
+    },
+    {
+      "question": "Which is an advantage of using parquet over CSV for big data analytics?",
+      "options": [
+        "Better for row-wise OLTP updates",
+        "Smaller storage footprint and faster column scans",
+        "Requires no schema at all",
+        "Easier for manual editing"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Parquet compresses and encodes columns efficiently, reducing I/O and storage."
+    },
+    {
+      "question": "Which Azure service would you use to set up end-to-end data lineage visualization?",
+      "options": [
+        "Microsoft Purview",
+        "Azure Monitor",
+        "Azure Bastion",
+        "Azure Policy"
+      ],
+      "correctAnswer": 0,
+      "explanation": "Purview provides lineage graphs to trace data flows across systems."
+    },
+    {
+      "question": "Which concept refers to securing data during transmission over networks?",
+      "options": [
+        "Encryption at rest",
+        "Encryption in transit",
+        "Data masking",
+        "Tokenization only"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Encryption in transit protects data as it moves between clients and services."
+    },
+    {
+      "question": "Which best describes a primary key in a relational table?",
+      "options": [
+        "A non-unique index for faster reads",
+        "A unique identifier for each row",
+        "A foreign key to another table",
+        "A randomly generated column without constraints"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A primary key uniquely identifies each row in a table."
+    }
+  ]
+}

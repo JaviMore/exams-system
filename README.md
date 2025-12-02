@@ -34,6 +34,8 @@ A complete web application for multiple-choice exams with administration backoff
 
 ## Usage
 
+### Option 1: Run with Python
+
 ```bash
 python3 server.py
 ```
@@ -41,6 +43,29 @@ python3 server.py
 Or simply:
 ```bash
 ./server.py
+```
+
+### Option 2: Run with Docker
+
+Build the image:
+```bash
+# Default port (3000)
+docker build -t exams-system .
+
+# Custom port
+docker build --build-arg PORT=8080 -t exams-system .
+```
+
+Run the container:
+```bash
+# Basic run
+docker run -p 3000:3000 exams-system
+
+# With environment file
+docker run -p 3000:3000 --env-file .env exams-system
+
+# With persistent database
+docker run -p 3000:3000 -v $(pwd)/data:/app/data --env DB_FILE=/app/data/exam_system.db exams-system
 ```
 
 The server will start at http://localhost:3000

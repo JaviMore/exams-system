@@ -454,7 +454,6 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
         print(f"{self.address_string()} - [{self.log_date_time_string()}] {format % args}")
 
 if __name__ == '__main__':
-    os.chdir('/home/javas/workspace/exams-system')
     
     # Initialize database
     print("Initializing database...")

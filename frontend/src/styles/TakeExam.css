@@ -1,0 +1,253 @@
+.exam-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.exam-header {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.exam-header h1 {
+  color: var(--dark);
+  font-size: 24px;
+}
+
+.timer {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--secondary-color);
+  transition: width 0.3s ease;
+}
+
+.question-navigator {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.question-nav-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--border);
+  color: var(--dark);
+  font-weight: bold;
+}
+
+.question-nav-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.question-nav-btn.answered {
+  background: #d1fae5;
+  border-color: var(--secondary-color);
+}
+
+.question-nav-btn.flagged {
+  background: #fed7aa;
+  border-color: #f97316;
+}
+
+.question-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.flag-btn {
+  padding: 8px 16px;
+  background: #ffedd5;
+  border: 2px solid #fdba74;
+  color: #ea580c;
+}
+
+.flag-btn:hover {
+  background: #fed7aa;
+  border-color: #f97316;
+}
+
+.question-text {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  color: var(--dark);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option:hover {
+  border-color: var(--primary-color);
+  background: #eff6ff;
+}
+
+.option.selected {
+  border-color: var(--primary-color);
+  background: #dbeafe;
+}
+
+.option input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.option span {
+  flex: 1;
+  font-size: 16px;
+}
+
+.exam-controls {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.exam-controls button {
+  flex: 1;
+}
+
+.btn-next {
+  background: var(--secondary-color);
+}
+
+.btn-submit {
+  background: var(--warning-color);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content h3 {
+  margin: 0 0 20px 0;
+  color: var(--dark);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-content p {
+  margin: 0 0 16px 0;
+  color: var(--dark);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.modal-content p strong {
+  color: var(--warning-color);
+  font-size: 18px;
+}
+
+.modal-warning {
+  color: var(--danger-color);
+  font-weight: 500;
+  font-size: 14px !important;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 12px 24px;
+}

@@ -1,55 +1,55 @@
 # Exams System - Frontend
 
-Frontend construido con React + Vite para el sistema de exámenes online.
+Frontend built with React + Vite for the online exams system.
 
-## Características
+## Features
 
 - ⚛️ React 18
-- ⚡ Vite para desarrollo rápido
-- 🎨 CSS moderno y responsivo
-- 🔐 Autenticación JWT
-- 📱 Diseño responsivo
-- 🎯 Navegación con React Router
+- ⚡ Vite for fast development
+- 🎨 Modern and responsive CSS
+- 🔐 JWT Authentication
+- 📱 Responsive design
+- 🎯 Navigation with React Router
 
-## Requisitos
+## Requirements
 
 - Node.js 16+
-- npm o yarn
+- npm or yarn
 
-## Instalación
+## Installation
 
-1. Instalar dependencias:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Configurar variables de entorno (opcional):
-Editar `src/services/api.js` si el backend está en una URL diferente.
+2. Configure environment variables (optional):
+Edit `src/services/api.js` if the backend is at a different URL.
 
-3. Iniciar servidor de desarrollo:
+3. Start development server:
 ```bash
 npm run dev
 ```
 
-La aplicación estará disponible en: http://localhost:5173
+The application will be available at: http://localhost:5173
 
-## Scripts Disponibles
+## Available Scripts
 
-- `npm run dev` - Iniciar servidor de desarrollo
-- `npm run build` - Construir para producción
-- `npm run preview` - Previsualizar build de producción
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 frontend/
-├── public/              # Archivos estáticos
+├── public/              # Static files
 ├── src/
-│   ├── components/      # Componentes reutilizables
+│   ├── components/      # Reusable components
 │   │   └── PrivateRoute.jsx
 │   ├── context/         # Context API
 │   │   └── AuthContext.jsx
-│   ├── pages/          # Páginas/Vistas
+│   ├── pages/          # Pages/Views
 │   │   ├── Login.jsx
 │   │   ├── Register.jsx
 │   │   ├── ExamList.jsx
@@ -57,9 +57,9 @@ frontend/
 │   │   ├── ResultDetail.jsx
 │   │   ├── MyResults.jsx
 │   │   └── Admin.jsx
-│   ├── services/       # Servicios API
+│   ├── services/       # API Services
 │   │   └── api.js
-│   ├── styles/         # Estilos CSS
+│   ├── styles/         # CSS Styles
 │   │   ├── App.css
 │   │   ├── Auth.css
 │   │   ├── ExamList.css
@@ -67,34 +67,34 @@ frontend/
 │   │   ├── ResultDetail.css
 │   │   ├── MyResults.css
 │   │   └── Admin.css
-│   ├── App.jsx         # Componente principal
-│   └── main.jsx        # Punto de entrada
+│   ├── App.jsx         # Main component
+│   └── main.jsx        # Entry point
 ├── index.html
 ├── package.json
 └── vite.config.js
 ```
 
-## Funcionalidades
+## Features
 
-### Para Estudiantes
-- ✅ Registro e inicio de sesión
-- ✅ Ver lista de exámenes disponibles
-- ✅ Realizar exámenes con temporizador
-- ✅ Navegación entre preguntas
-- ✅ Marcar preguntas para revisión
-- ✅ Ver resultados detallados
-- ✅ Descargar reporte de resultados
-- ✅ Historial de exámenes realizados
+### For Students
+- ✅ Registration and login
+- ✅ View list of available exams
+- ✅ Take exams with timer
+- ✅ Navigate between questions
+- ✅ Mark questions for review
+- ✅ View detailed results
+- ✅ Download results report
+- ✅ History of completed exams
 
-### Para Administradores
-- ✅ Panel de administración
-- ✅ Crear exámenes manualmente
-- ✅ Importar exámenes desde JSON
-- ✅ Gestionar exámenes existentes
-- ✅ Ver todos los resultados
-- ✅ Eliminar exámenes y resultados
+### For Administrators
+- ✅ Administration panel
+- ✅ Create exams manually
+- ✅ Import exams from JSON
+- ✅ Manage existing exams
+- ✅ View all results
+- ✅ Delete exams and results
 
-## Formato JSON para Importar Exámenes
+## JSON Format for Importing Exams
 
 ```json
 {
@@ -111,47 +111,47 @@ frontend/
 }
 ```
 
-## Rutas de la Aplicación
+## Application Routes
 
-- `/login` - Página de inicio de sesión
-- `/register` - Página de registro
-- `/` - Lista de exámenes (requiere autenticación)
-- `/exam/:id` - Realizar examen (requiere autenticación)
-- `/results` - Mis resultados (requiere autenticación)
-- `/results/:id` - Detalle de resultado (requiere autenticación)
-- `/admin` - Panel de administración (requiere ser admin)
+- `/login` - Login page
+- `/register` - Registration page
+- `/` - Exams list (requires authentication)
+- `/exam/:id` - Take exam (requires authentication)
+- `/results` - My results (requires authentication)
+- `/results/:id` - Result detail (requires authentication)
+- `/admin` - Administration panel (requires admin)
 
-## Desarrollo
+## Development
 
-El proyecto usa Vite con Hot Module Replacement (HMR) para desarrollo rápido.
+The project uses Vite with Hot Module Replacement (HMR) for fast development.
 
-## Build para Producción
+## Production Build
 
 ```bash
 npm run build
 ```
 
-Los archivos se generarán en la carpeta `dist/`
+Files will be generated in the `dist/` folder
 
-## Despliegue
+## Deployment
 
-Los archivos estáticos generados en `dist/` pueden desplegarse en:
+The static files generated in `dist/` can be deployed to:
 - Netlify
 - Vercel
 - GitHub Pages
-- Cualquier servidor web estático
+- Any static web server
 
-### Variables de Entorno para Producción
+### Production Environment Variables
 
-Asegúrate de actualizar la URL del backend en `src/services/api.js` antes del build:
+Make sure to update the backend URL in `src/services/api.js` before build:
 
 ```javascript
-const API_URL = 'https://tu-backend-url.com/api';
+const API_URL = 'https://your-backend-url.com/api';
 ```
 
-## Proxy de Desarrollo
+## Development Proxy
 
-El archivo `vite.config.js` incluye un proxy para redirigir `/api` al backend en desarrollo:
+The `vite.config.js` file includes a proxy to redirect `/api` to the backend in development:
 
 ```javascript
 proxy: {
@@ -162,9 +162,9 @@ proxy: {
 }
 ```
 
-## Soporte de Navegadores
+## Browser Support
 
-- Chrome (últimas 2 versiones)
-- Firefox (últimas 2 versiones)
-- Safari (últimas 2 versiones)
-- Edge (últimas 2 versiones)
+- Chrome (latest 2 versions)
+- Firefox (latest 2 versions)
+- Safari (latest 2 versions)
+- Edge (latest 2 versions)

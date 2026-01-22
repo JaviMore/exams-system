@@ -1,76 +1,76 @@
-# Exams System - Aplicación Productiva
+# Exams System - Production Application
 
-Sistema completo de exámenes online con arquitectura separada en frontend y backend.
+Complete online exams system with separated frontend and backend architecture.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
 ### Backend (FastAPI + Python)
 - **Framework**: FastAPI
-- **Base de datos**: SQLite (fácilmente migrable a PostgreSQL)
-- **Autenticación**: JWT (JSON Web Tokens)
+- **Database**: SQLite (easily migratable to PostgreSQL)
+- **Authentication**: JWT (JSON Web Tokens)
 - **ORM**: SQLAlchemy
-- **Documentación API**: Swagger UI automática
+- **API Documentation**: Automatic Swagger UI
 
 ### Frontend (React + Vite)
 - **Framework**: React 18
 - **Build Tool**: Vite
 - **Routing**: React Router v6
 - **HTTP Client**: Axios
-- **Estado**: Context API
+- **State**: Context API
 
-## 📋 Requisitos Previos
+## 📋 Prerequisites
 
 - Python 3.8+
 - Node.js 16+
-- npm o yarn
+- npm or yarn
 
-## 🚀 Instalación Rápida
+## 🚀 Quick Installation
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 ```bash
 cd exams-system
 ```
 
-### 2. Configurar Backend
+### 2. Configure Backend
 
 ```bash
 cd backend
 
-# Crear entorno virtual
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# Instalar dependencias
+# Install dependencies
 pip install -r requirements.txt
 
-# Configurar variables de entorno
+# Configure environment variables
 cp .env.example .env
-# Editar .env con tus configuraciones
+# Edit .env with your configurations
 
-# Iniciar servidor
+# Start server
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Backend disponible en: http://localhost:8000
-Documentación API: http://localhost:8000/docs
+Backend available at: http://localhost:8000
+API Documentation: http://localhost:8000/docs
 
-### 3. Configurar Frontend
+### 3. Configure Frontend
 
 ```bash
 cd frontend
 
-# Instalar dependencias
+# Install dependencies
 npm install
 
-# Iniciar servidor de desarrollo
+# Start development server
 npm run dev
 ```
 
-Frontend disponible en: http://localhost:5173
+Frontend available at: http://localhost:5173
 
-## 👤 Crear Usuario Administrador
+## 👤 Create Administrator User
 
-Para crear un usuario administrador, puedes usar el script incluido:
+To create an administrator user, you can use the included script:
 
 ```bash
 cd backend
@@ -78,45 +78,45 @@ source venv/bin/activate
 python create_admin.py admin@example.com admin123 "Administrator"
 ```
 
-## 📥 Importar Exámenes Existentes
+## 📥 Import Existing Exams
 
-Para importar los exámenes del sistema anterior:
+To import exams from the previous system:
 
 ```bash
 cd backend
 source venv/bin/activate
 
-# Importar todos los exámenes de la carpeta exams/
+# Import all exams from the exams/ folder
 python import_exams.py ../exams
 
-# O importar un archivo específico
+# Or import a specific file
 python import_exams.py ../exams/dp900-exam-a.json
 ```
 
-## 📚 Funcionalidades
+## 📚 Features
 
-### Estudiantes
-- ✅ Registro con email y contraseña
-- ✅ Login con autenticación JWT
-- ✅ Ver exámenes disponibles
-- ✅ Realizar exámenes con temporizador
-- ✅ Navegación entre preguntas
-- ✅ Marcar preguntas para revisión
-- ✅ Ver resultados detallados con explicaciones
-- ✅ Historial de exámenes
-- ✅ Descargar reportes
+### Students
+- ✅ Registration with email and password
+- ✅ Login with JWT authentication
+- ✅ View available exams
+- ✅ Take exams with timer
+- ✅ Navigate between questions
+- ✅ Mark questions for review
+- ✅ View detailed results with explanations
+- ✅ Exam history
+- ✅ Download reports
 
-### Administradores
-- ✅ Panel de administración
-- ✅ Crear exámenes manualmente
-- ✅ Importar exámenes desde JSON
-- ✅ Gestionar exámenes
-- ✅ Ver todos los resultados
-- ✅ Eliminar exámenes y resultados
+### Administrators
+- ✅ Administration panel
+- ✅ Create exams manually
+- ✅ Import exams from JSON
+- ✅ Manage exams
+- ✅ View all results
+- ✅ Delete exams and results
 
-## 🗄️ Estructura de Base de Datos
+## 🗄️ Database Structure
 
-### Tablas
+### Tables
 
 **users**
 - id (PK)
@@ -152,16 +152,16 @@ python import_exams.py ../exams/dp900-exam-a.json
 - total_questions (int)
 - created_at
 
-## 🔐 Seguridad
+## 🔐 Security
 
-- Passwords hasheados con bcrypt
-- Tokens JWT con expiración configurable (7 días por defecto)
-- Middleware de autenticación en todas las rutas protegidas
-- Roles de usuario (admin/estudiante)
-- CORS configurado
-- Validación de datos con Pydantic
+- Passwords hashed with bcrypt
+- JWT tokens with configurable expiration (7 days by default)
+- Authentication middleware on all protected routes
+- User roles (admin/student)
+- CORS configured
+- Data validation with Pydantic
 
-## 📝 Formato JSON para Importar Exámenes
+## 📝 JSON Format for Importing Exams
 
 ```json
 {
@@ -183,64 +183,64 @@ python import_exams.py ../exams/dp900-exam-a.json
 }
 ```
 
-## 🚀 Inicio Rápido con Scripts
+## 🚀 Quick Start with Scripts
 
-### Iniciar todo con un comando:
+### Start everything with one command:
 ```bash
 ./start.sh
 ```
 
-Este script:
-1. Configura el backend (crea venv, instala dependencias)
-2. Configura el frontend (instala node_modules)
-3. Inicia ambos servidores
-4. Muestra los PIDs y rutas de logs
+This script:
+1. Configures the backend (creates venv, installs dependencies)
+2. Configures the frontend (installs node_modules)
+3. Starts both servers
+4. Shows PIDs and log paths
 
-### Detener servidores:
+### Stop servers:
 ```bash
 ./stop.sh
 ```
 
-## 🐳 Docker (Opcional)
+## 🐳 Docker (Optional)
 
-### Iniciar con Docker Compose:
+### Start with Docker Compose:
 ```bash
 docker-compose up -d
 ```
 
-### Ver logs:
+### View logs:
 ```bash
 docker-compose logs -f
 ```
 
-### Detener:
+### Stop:
 ```bash
 docker-compose down
 ```
 
-## 🌐 Despliegue en Producción
+## 🌐 Production Deployment
 
 ### Backend (Railway, Render, Heroku, Azure)
 
-1. Configurar variables de entorno:
+1. Configure environment variables:
 ```
-DATABASE_URL=postgresql://user:pass@host/db  # Para PostgreSQL
-SECRET_KEY=tu-clave-secreta-segura
-BACKEND_CORS_ORIGINS=https://tu-frontend.com
+DATABASE_URL=postgresql://user:pass@host/db  # For PostgreSQL
+SECRET_KEY=your-secure-secret-key
+BACKEND_CORS_ORIGINS=https://your-frontend.com
 ```
 
-2. Para PostgreSQL, añadir a requirements.txt:
+2. For PostgreSQL, add to requirements.txt:
 ```
 psycopg2-binary==2.9.9
 ```
 
-3. Deploy desde Git o CLI
+3. Deploy from Git or CLI
 
 ### Frontend (Netlify, Vercel, GitHub Pages, Azure Static Web Apps)
 
-1. Actualizar API_URL en `frontend/src/services/api.js`:
+1. Update API_URL in `frontend/src/services/api.js`:
 ```javascript
-const API_URL = 'https://tu-backend.com/api';
+const API_URL = 'https://your-backend.com/api';
 ```
 
 2. Build:
@@ -249,7 +249,7 @@ cd frontend
 npm run build
 ```
 
-3. Deploy carpeta `dist/`
+3. Deploy `dist/` folder
 
 #### Netlify
 ```bash
@@ -263,9 +263,9 @@ npm install -g vercel
 vercel --prod
 ```
 
-## 📊 Migración de Datos
+## 📊 Data Migration
 
-Para migrar datos del sistema antiguo:
+To migrate data from the old system:
 
 ```bash
 cd backend
@@ -273,10 +273,10 @@ source venv/bin/activate
 python migrate_data.py
 ```
 
-Este script:
-1. Migra todos los exámenes y preguntas
-2. Crea usuarios a partir de los resultados antiguos
-3. Asigna password por defecto: `password123`
+This script:
+1. Migrates all exams and questions
+2. Creates users from old results
+3. Assigns default password: `password123`
 
 ## 🧪 Testing
 
@@ -293,52 +293,52 @@ cd frontend
 npm test
 ```
 
-## 📖 Documentación API
+## 📖 API Documentation
 
-Documentación interactiva disponible en:
+Interactive documentation available at:
 - **Swagger UI**: http://localhost:8000/docs
 - **ReDoc**: http://localhost:8000/redoc
 
-### Endpoints Principales
+### Main Endpoints
 
-#### Autenticación
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Login (devuelve JWT token)
-- `GET /api/auth/me` - Información del usuario actual
+#### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - Login (returns JWT token)
+- `GET /api/auth/me` - Current user information
 
-#### Exámenes
-- `GET /api/exams/` - Listar exámenes
-- `GET /api/exams/{id}` - Obtener examen (sin respuestas correctas)
-- `GET /api/exams/{id}/full` - Obtener examen completo (admin)
-- `POST /api/exams/` - Crear examen (admin)
-- `PUT /api/exams/{id}` - Actualizar examen (admin)
-- `DELETE /api/exams/{id}` - Eliminar examen (admin)
+#### Exams
+- `GET /api/exams/` - List exams
+- `GET /api/exams/{id}` - Get exam (without correct answers)
+- `GET /api/exams/{id}/full` - Get complete exam (admin)
+- `POST /api/exams/` - Create exam (admin)
+- `PUT /api/exams/{id}` - Update exam (admin)
+- `DELETE /api/exams/{id}` - Delete exam (admin)
 
-#### Resultados
-- `POST /api/results/` - Enviar respuestas de examen
-- `GET /api/results/my` - Mis resultados
-- `GET /api/results/{id}` - Detalle de resultado
-- `GET /api/results/` - Todos los resultados (admin)
-- `DELETE /api/results/{id}` - Eliminar resultado (admin)
+#### Results
+- `POST /api/results/` - Submit exam answers
+- `GET /api/results/my` - My results
+- `GET /api/results/{id}` - Result detail
+- `GET /api/results/` - All results (admin)
+- `DELETE /api/results/{id}` - Delete result (admin)
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Technologies Used
 
 ### Backend
-- **FastAPI** - Framework web moderno y rápido
-- **SQLAlchemy** - ORM para Python
-- **Pydantic** - Validación de datos
+- **FastAPI** - Modern and fast web framework
+- **SQLAlchemy** - ORM for Python
+- **Pydantic** - Data validation
 - **python-jose** - JWT tokens
-- **passlib** - Hashing de passwords
+- **passlib** - Password hashing
 - **uvicorn** - ASGI server
 
 ### Frontend
-- **React 18** - Librería UI
+- **React 18** - UI Library
 - **Vite** - Build tool
 - **React Router v6** - Routing
 - **Axios** - HTTP client
-- **CSS3** - Estilos modernos
+- **CSS3** - Modern styles
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 exams-system/
@@ -348,76 +348,74 @@ exams-system/
 │   │   ├── core/          # Config, DB, Security
 │   │   ├── models/        # SQLAlchemy models
 │   │   ├── schemas/       # Pydantic schemas
-│   │   └── main.py        # App principal
-│   ├── create_admin.py    # Script crear admin
-│   ├── import_exams.py    # Script importar exámenes
-│   ├── migrate_data.py    # Script migración
+│   │   └── main.py        # Main app
+│   ├── create_admin.py    # Script to create admin
+│   ├── import_exams.py    # Script to import exams
+│   ├── migrate_data.py    # Migration script
 │   ├── requirements.txt
 │   └── README.md
 ├── frontend/
 │   ├── src/
-│   │   ├── components/    # Componentes
+│   │   ├── components/    # Components
 │   │   ├── context/       # Context API
-│   │   ├── pages/         # Páginas
+│   │   ├── pages/         # Pages
 │   │   ├── services/      # API calls
 │   │   ├── styles/        # CSS
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   ├── package.json
 │   └── README.md
-├── exams/                 # Exámenes JSON
-├── docker-compose.yml
-├── start.sh              # Script inicio rápido
-├── stop.sh               # Script detener
+├── exams/                 # JSON exams
+├── scripts/               # Useful scripts
 └── README.md
 ```
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-1. Fork el proyecto
-2. Crear rama feature (`git checkout -b feature/AmazingFeature`)
-3. Commit cambios (`git commit -m 'Add AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abrir Pull Request
+1. Fork the project
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la licencia MIT.
+This project is under the MIT license.
 
-## 🆘 Soporte
+## 🆘 Support
 
-Para problemas o preguntas:
-- Abrir un issue en GitHub
-- Documentación: Ver README en backend/ y frontend/
+For issues or questions:
+- Open an issue on GitHub
+- Documentation: See README in backend/ and frontend/
 
-## ⚙️ Configuración Avanzada
+## ⚙️ Advanced Configuration
 
-### Variables de Entorno Backend
+### Backend Environment Variables
 
-Editar `backend/.env`:
+Edit `backend/.env`:
 
 ```env
 DEBUG=True
 DATABASE_URL=sqlite:///./exam_system.db
-SECRET_KEY=tu-clave-secreta
+SECRET_KEY=your-secret-key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=10080
 BACKEND_CORS_ORIGINS=http://localhost:5173,http://localhost:3000
 ```
 
-### Cambiar a PostgreSQL
+### Switch to PostgreSQL
 
-1. Actualizar `DATABASE_URL` en `.env`:
+1. Update `DATABASE_URL` in `.env`:
 ```
 DATABASE_URL=postgresql://user:password@localhost/exam_system
 ```
 
-2. Añadir a `requirements.txt`:
+2. Add to `requirements.txt`:
 ```
 psycopg2-binary==2.9.9
 ```
 
-3. Reinstalar dependencias:
+3. Reinstall dependencies:
 ```bash
 pip install -r requirements.txt
 ```
@@ -425,16 +423,16 @@ pip install -r requirements.txt
 ## 🔄 Changelog
 
 ### v1.0.0 (2024)
-- ✨ Sistema completo de autenticación JWT
-- ✨ CRUD completo de exámenes
-- ✨ Sistema de resultados con detalles
-- ✨ Panel de administración
-- ✨ Importación de exámenes JSON
-- ✨ Frontend React con Vite
-- ✨ Backend FastAPI
-- ✨ Scripts de migración y utilidades
+- ✨ Complete JWT authentication system
+- ✨ Complete CRUD for exams
+- ✨ Results system with details
+- ✨ Administration panel
+- ✨ JSON exam import
+- ✨ React Frontend with Vite
+- ✨ FastAPI Backend
+- ✨ Migration and utility scripts
 - ✨ Docker support
-- ✨ Documentación completa
+- ✨ Complete documentation
 
 If that folder doesn't exist or contains no valid files, it will make a second attempt in the current directory (allowing direct use of the included `sample_exam.json`).
 

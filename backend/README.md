@@ -1,80 +1,80 @@
 # Exams System - Backend
 
-Backend API construido con FastAPI para el sistema de exámenes online.
+Backend API built with FastAPI for the online exams system.
 
-## Características
+## Features
 
-- 🔐 Autenticación JWT
-- 👥 Registro y login de usuarios
-- 📝 CRUD completo de exámenes
-- 📊 Sistema de resultados
-- 🔒 Roles de usuario (admin/estudiante)
-- 🗄️ Base de datos SQLite/PostgreSQL
+- 🔐 JWT Authentication
+- 👥 User registration and login
+- 📝 Complete CRUD for exams
+- 📊 Results system
+- 🔒 User roles (admin/student)
+- 🗄️ SQLite/PostgreSQL database
 
-## Requisitos
+## Requirements
 
 - Python 3.8+
 - pip
 
-## Instalación
+## Installation
 
-1. Crear entorno virtual:
+1. Create virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-2. Instalar dependencias:
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Configurar variables de entorno:
+3. Configure environment variables:
 ```bash
 cp .env.example .env
-# Editar .env con tus configuraciones
+# Edit .env with your configurations
 ```
 
-4. Iniciar el servidor:
+4. Start the server:
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-La API estará disponible en: http://localhost:8000
+The API will be available at: http://localhost:8000
 
-## Documentación API
+## API Documentation
 
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
 
-## Endpoints Principales
+## Main Endpoints
 
-### Autenticación
-- `POST /api/auth/register` - Registro de usuario
-- `POST /api/auth/login` - Login (devuelve JWT token)
-- `GET /api/auth/me` - Información del usuario actual
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - Login (returns JWT token)
+- `GET /api/auth/me` - Current user information
 
-### Exámenes
-- `GET /api/exams/` - Listar exámenes
-- `GET /api/exams/{id}` - Obtener examen (sin respuestas correctas)
-- `GET /api/exams/{id}/full` - Obtener examen completo (admin)
-- `POST /api/exams/` - Crear examen (admin)
-- `PUT /api/exams/{id}` - Actualizar examen (admin)
-- `DELETE /api/exams/{id}` - Eliminar examen (admin)
+### Exams
+- `GET /api/exams/` - List exams
+- `GET /api/exams/{id}` - Get exam (without correct answers)
+- `GET /api/exams/{id}/full` - Get complete exam (admin)
+- `POST /api/exams/` - Create exam (admin)
+- `PUT /api/exams/{id}` - Update exam (admin)
+- `DELETE /api/exams/{id}` - Delete exam (admin)
 
-### Resultados
-- `POST /api/results/` - Enviar respuestas de examen
-- `GET /api/results/my` - Mis resultados
-- `GET /api/results/{id}` - Detalle de resultado
-- `GET /api/results/` - Todos los resultados (admin)
-- `DELETE /api/results/{id}` - Eliminar resultado (admin)
+### Results
+- `POST /api/results/` - Submit exam answers
+- `GET /api/results/my` - My results
+- `GET /api/results/{id}` - Result detail
+- `GET /api/results/` - All results (admin)
+- `DELETE /api/results/{id}` - Delete result (admin)
 
-## Crear Usuario Administrador
+## Create Administrator User
 
-Para crear un usuario administrador, puedes usar el script de inicialización o conectarte directamente a la base de datos:
+To create an administrator user, you can use the initialization script or connect directly to the database:
 
 ```python
-# En una sesión de Python
+# In a Python session
 from app.core.database import SessionLocal
 from app.models.user import User
 from app.core.security import get_password_hash
@@ -90,9 +90,9 @@ db.add(admin)
 db.commit()
 ```
 
-## Importar Exámenes desde JSON
+## Import Exams from JSON
 
-Los exámenes pueden importarse usando la API POST /api/exams/ con el siguiente formato:
+Exams can be imported using the POST /api/exams/ API with the following format:
 
 ```json
 {
@@ -109,7 +109,7 @@ Los exámenes pueden importarse usando la API POST /api/exams/ con el siguiente 
 }
 ```
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 backend/
@@ -118,28 +118,28 @@ backend/
 │   │   ├── auth.py
 │   │   ├── exams.py
 │   │   └── results.py
-│   ├── core/             # Configuración
+│   ├── core/             # Configuration
 │   │   ├── config.py
 │   │   ├── database.py
 │   │   └── security.py
-│   ├── models/           # Modelos SQLAlchemy
+│   ├── models/           # SQLAlchemy Models
 │   │   ├── user.py
 │   │   ├── exam.py
 │   │   ├── question.py
 │   │   └── result.py
-│   ├── schemas/          # Schemas Pydantic
+│   ├── schemas/          # Pydantic Schemas
 │   │   ├── user.py
 │   │   ├── exam.py
 │   │   └── result.py
-│   └── main.py          # Aplicación principal
+│   └── main.py          # Main application
 ├── requirements.txt
 ├── .env.example
 └── README.md
 ```
 
-## Desarrollo
+## Development
 
-Para desarrollo con hot-reload:
+For development with hot-reload:
 ```bash
 uvicorn app.main:app --reload
 ```
@@ -150,24 +150,24 @@ uvicorn app.main:app --reload
 pytest
 ```
 
-## Producción
+## Production
 
-Para producción, usa gunicorn:
+For production, use gunicorn:
 ```bash
 gunicorn app.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
-## Migraciones de Base de Datos
+## Database Migrations
 
-Si cambias a PostgreSQL y quieres usar Alembic para migraciones:
+If you switch to PostgreSQL and want to use Alembic for migrations:
 
 ```bash
-# Inicializar Alembic
+# Initialize Alembic
 alembic init alembic
 
-# Crear migración
+# Create migration
 alembic revision --autogenerate -m "Initial migration"
 
-# Aplicar migración
+# Apply migration
 alembic upgrade head
 ```

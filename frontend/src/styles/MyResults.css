@@ -1,0 +1,104 @@
+.header {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--dark);
+}
+
+.results-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.result-card {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.result-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.result-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.result-card-header h3 {
+  color: var(--dark);
+  font-size: 18px;
+  flex: 1;
+}
+
+.score-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.score-badge.passed {
+  background: #d1fae5;
+  color: var(--secondary-color);
+}
+
+.score-badge.failed {
+  background: #fee2e2;
+  color: var(--danger-color);
+}
+
+.result-card-body {
+  margin-bottom: 20px;
+}
+
+.result-card-body p {
+  margin-bottom: 8px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.result-card-body .status {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 12px;
+}
+
+.result-card-body .status.passed {
+  color: var(--secondary-color);
+}
+
+.result-card-body .status.failed {
+  color: var(--danger-color);
+}
+
+.result-card button {
+  width: 100%;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state p {
+  color: #6b7280;
+  font-size: 18px;
+  margin-bottom: 24px;
+}

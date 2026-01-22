@@ -1,189 +1,419 @@
-# Online Exam System
+# Exams System - Production Application
 
-A complete web application for multiple-choice exams with administration backoffice.
+Complete online exams system with separated frontend and backend architecture.
 
-## Features
+## 🏗️ Architecture
 
-### For Users:
-- **Simple login**: Just enter your name
-- **Exam selection**: Choose from multiple available exams
-- **Intuitive exam interface**: Take exams with multiple-choice questions
-- **Detailed results**: 
-  - Final score
-  - Correct and incorrect answers
-  - Explanations for each question
-  - Download report option
+### Backend (FastAPI + Python)
+- **Framework**: FastAPI
+- **Database**: SQLite (easily migratable to PostgreSQL)
+- **Authentication**: JWT (JSON Web Tokens)
+- **ORM**: SQLAlchemy
+- **API Documentation**: Automatic Swagger UI
 
-### For Administrators (Backoffice):
-- **Create exams**: Add new exams with multiple questions
-- **Question management**: 
-  - Question text
-  - 4 answer options
-  - Mark the correct answer
-  - Add explanation
-- **View results**: 
-  - List of all results
-  - Filter by exam
-  - Student information, date and score
-- **Authentication**: Secure access with username and password
+### Frontend (React + Vite)
+- **Framework**: React 18
+- **Build Tool**: Vite
+- **Routing**: React Router v6
+- **HTTP Client**: Axios
+- **State**: Context API
 
-## Installation
+## 📋 Prerequisites
 
-1. Clone or download the project
-2. No additional dependencies required (uses only native Python 3 modules including SQLite)
+- Python 3.8+
+- Node.js 16+
+- npm or yarn
 
-## Usage
+## 🚀 Quick Installation
 
-### Option 1: Run with Python
-
+### 1. Clone the repository
 ```bash
-python3 server.py
+cd exams-system
 ```
 
-Or simply:
+### 2. Configure Backend
+
 ```bash
-./server.py
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env with your configurations
+
+# Start server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Option 2: Run with Docker
+Backend available at: http://localhost:8000
+API Documentation: http://localhost:8000/docs
 
-Build the image:
+### 3. Configure Frontend
+
 ```bash
-# Default port (3000)
-docker build -t exams-system .
+cd frontend
 
-# Custom port
-docker build --build-arg PORT=8080 -t exams-system .
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-Run the container:
+Frontend available at: http://localhost:5173
+
+## 👤 Create Administrator User
+
+To create an administrator user, you can use the included script:
+
 ```bash
-# Basic run
-docker run -p 3000:3000 exams-system
-
-# With environment file
-docker run -p 3000:3000 --env-file .env exams-system
-
-# With persistent database
-docker run -p 3000:3000 -v $(pwd)/data:/app/data --env DB_FILE=/app/data/exam_system.db exams-system
+cd backend
+source venv/bin/activate
+python create_admin.py admin@example.com admin123 "Administrator"
 ```
 
-The server will start at http://localhost:3000
+## 📥 Import Existing Exams
 
-### Automatic Exam Loading from JSON
+To import exams from the previous system:
 
-On startup, the server attempts to populate the database by reading all `*.json` files from the folder specified by the `EXAMS_DIR` environment variable (default is `exams`).
-
-If that folder doesn't exist or contains no valid files, it will make a second attempt in the current directory (allowing direct use of the included `sample_exam.json`).
-
-Steps to add exams:
-1. Create `exams/` folder (optional but recommended).
-2. Place one or more `.json` files inside with the correct format (see below).
-3. Restart the server (exams are only loaded when the table is empty).
-
-Example execution specifying folder:
 ```bash
-EXAMS_DIR=exams PORT=3000 python3 server.py
+cd backend
+source venv/bin/activate
+
+# Import all exams from the exams/ folder
+python import_exams.py ../exams
+
+# Or import a specific file
+python import_exams.py ../exams/dp900-exam-a.json
 ```
 
-## How to Use
+## 📚 Features
 
-### Users:
-1. Go to http://localhost:3000
-2. Enter your name
-3. Select an exam
-4. Answer the questions
-5. View your detailed results
-6. Download your report (optional)
+### Students
+- ✅ Registration with email and password
+- ✅ Login with JWT authentication
+- ✅ View available exams
+- ✅ Take exams with timer
+- ✅ Navigate between questions
+- ✅ Mark questions for review
+- ✅ View detailed results with explanations
+- ✅ Exam history
+- ✅ Download reports
 
-### Cookie Persistence
-The system uses cookies to improve the experience:
-- `examUser`: remembers your name and avoids having to re-enter it (24h).
-- `examState`: saves the exam in progress (id, start time and answers) to recover your progress if you accidentally reload the page or close the browser. The remaining time is recalculated on return.
-  - If time has already expired on return, results are automatically submitted.
-- `backofficeAuth`: keeps the backoffice session active (1h). Logging out removes it.
+### Administrators
+- ✅ Administration panel
+- ✅ Create exams manually
+- ✅ Import exams from JSON
+- ✅ Manage exams
+- ✅ View all results
+- ✅ Delete exams and results
 
-Limitations: This is not a real security mechanism; cookies are not encrypted. Do not use in production without adding proper authentication and secure expiration on the server.
+## 🗄️ Database Structure
 
-### Administrators:
-1. Go to http://localhost:3000/backoffice.html
-2. Login with credentials (default: admin / admin123)
-3. **Create Exam**:
-   - **Option 1: Import from JSON**
-     - Click "Upload JSON File" and select your JSON file
-     - Or download the sample JSON template
-     - The form will auto-populate with the exam data
-   - **Option 2: Create Manually**
-     - Enter exam title
-     - Add questions with the "+ Add Question" button
-     - For each question, complete:
-       - Question text
-       - 4 options (mark the correct one with the radio button)
-       - Explanation
-   - Save the exam
-4. **View Results**:
-   - Check all results
-   - Filter by specific exam
+### Tables
 
-## JSON Format for Importing Exams
+**users**
+- id (PK)
+- email (unique)
+- hashed_password
+- full_name
+- is_admin
+- is_active
+- created_at, updated_at
 
-You can create exams by uploading a JSON file with the following structure:
+**exams**
+- id (PK)
+- title
+- duration_minutes
+- created_at, updated_at
+
+**questions**
+- id (PK)
+- exam_id (FK)
+- question (text)
+- options (JSON array)
+- correct_answer (int)
+- explanation (text)
+- question_order
+
+**results**
+- id (PK)
+- user_id (FK)
+- exam_id (FK)
+- answers (JSON)
+- score (float)
+- correct_answers (int)
+- total_questions (int)
+- created_at
+
+## 🔐 Security
+
+- Passwords hashed with bcrypt
+- JWT tokens with configurable expiration (7 days by default)
+- Authentication middleware on all protected routes
+- User roles (admin/student)
+- CORS configured
+- Data validation with Pydantic
+
+## 📝 JSON Format for Importing Exams
 
 ```json
 {
-  "title": "Exam Title",
-  "durationMinutes": 30,
+  "title": "DP-900 Practice Exam",
+  "durationMinutes": 45,
   "questions": [
     {
-      "question": "Question text?",
-      "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "question": "What is Azure SQL Database?",
+      "options": [
+        "A managed relational database service",
+        "A NoSQL database",
+        "A file storage service",
+        "A virtual machine"
+      ],
       "correctAnswer": 0,
-      "explanation": "Explanation for the correct answer"
+      "explanation": "Azure SQL Database is a fully managed relational database service..."
     }
   ]
 }
 ```
 
-- `title`: String with the exam name
-- `questions`: Array of question objects
-  - `question`: The question text
-  - `options`: Array of exactly 4 options
-  - `correctAnswer`: Index (0-3) of the correct option
-  - `explanation`: Text explaining why the answer is correct
+## 🚀 Quick Start with Scripts
 
-Additional fields:
-- `durationMinutes`: Duration of the exam in minutes (integer). If omitted, defaults to 30.
-
-A sample file (`sample_exam.json`) is included in the project.
-
-## Technologies
-
-- **Backend**: Python 3 (native HTTP server, no frameworks)
-- **Frontend**: HTML5, CSS3, vanilla JavaScript
-- **Database**: SQLite (persistent local storage)
-
-## Sample Exams
-Hardcoded exams are no longer inserted. Instead, place your JSON files in `exams/` or use the existing `sample_exam.json` to initialize the empty database.
-
-## Project Structure
-
-```
-forms/
-├── server.py             # Python server
-├── exam_system.db        # SQLite database (created on first run)
-├── README.md             # This file
-└── public/
-    ├── index.html        # Main page (login + exams)
-    ├── backoffice.html   # Administration panel
-    └── styles.css        # Application styles
+### Start everything with one command:
+```bash
+./start.sh
 ```
 
-## Database
+This script:
+1. Configures the backend (creates venv, installs dependencies)
+2. Configures the frontend (installs node_modules)
+3. Starts both servers
+4. Shows PIDs and log paths
 
-The application uses SQLite to persist data. The database file `exam_system.db` is automatically created on first run with the following tables:
+### Stop servers:
+```bash
+./stop.sh
+```
 
-- **exams**: Stores exam information
-- **questions**: Stores questions associated with each exam
-- **results**: Stores student exam results
 
-All data persists between server restarts.
+## 🌐 Production Deployment
+
+### Backend (Railway, Render, Heroku, Azure)
+
+1. Configure environment variables:
+```
+DATABASE_URL=postgresql://user:pass@host/db  # For PostgreSQL
+SECRET_KEY=your-secure-secret-key
+BACKEND_CORS_ORIGINS=https://your-frontend.com
+```
+
+2. For PostgreSQL, add to requirements.txt:
+```
+psycopg2-binary==2.9.9
+```
+
+3. Deploy from Git or CLI
+
+### Frontend (Netlify, Vercel, GitHub Pages, Azure Static Web Apps)
+
+1. Update API_URL in `frontend/src/services/api.js`:
+```javascript
+const API_URL = 'https://your-backend.com/api';
+```
+
+2. Build:
+```bash
+cd frontend
+npm run build
+```
+
+3. Deploy `dist/` folder
+
+#### Netlify
+```bash
+npm install -g netlify-cli
+netlify deploy --prod --dir=dist
+```
+
+#### Vercel
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+## 📊 Data Migration
+
+To migrate data from the old system:
+
+```bash
+cd backend
+source venv/bin/activate
+python migrate_data.py
+```
+
+This script:
+1. Migrates all exams and questions
+2. Creates users from old results
+3. Assigns default password: `password123`
+
+## 🧪 Testing
+
+### Backend
+```bash
+cd backend
+source venv/bin/activate
+pytest
+```
+
+### Frontend
+```bash
+cd frontend
+npm test
+```
+
+## 📖 API Documentation
+
+Interactive documentation available at:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+
+### Main Endpoints
+
+#### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - Login (returns JWT token)
+- `GET /api/auth/me` - Current user information
+
+#### Exams
+- `GET /api/exams/` - List exams
+- `GET /api/exams/{id}` - Get exam (without correct answers)
+- `GET /api/exams/{id}/full` - Get complete exam (admin)
+- `POST /api/exams/` - Create exam (admin)
+- `PUT /api/exams/{id}` - Update exam (admin)
+- `DELETE /api/exams/{id}` - Delete exam (admin)
+
+#### Results
+- `POST /api/results/` - Submit exam answers
+- `GET /api/results/my` - My results
+- `GET /api/results/{id}` - Result detail
+- `GET /api/results/` - All results (admin)
+- `DELETE /api/results/{id}` - Delete result (admin)
+
+## 🛠️ Technologies Used
+
+### Backend
+- **FastAPI** - Modern and fast web framework
+- **SQLAlchemy** - ORM for Python
+- **Pydantic** - Data validation
+- **python-jose** - JWT tokens
+- **passlib** - Password hashing
+- **uvicorn** - ASGI server
+
+### Frontend
+- **React 18** - UI Library
+- **Vite** - Build tool
+- **React Router v6** - Routing
+- **Axios** - HTTP client
+- **CSS3** - Modern styles
+
+## 📁 Project Structure
+
+```
+exams-system/
+├── backend/
+│   ├── app/
+│   │   ├── api/           # Endpoints
+│   │   ├── core/          # Config, DB, Security
+│   │   ├── models/        # SQLAlchemy models
+│   │   ├── schemas/       # Pydantic schemas
+│   │   └── main.py        # Main app
+│   ├── create_admin.py    # Script to create admin
+│   ├── import_exams.py    # Script to import exams
+│   ├── migrate_data.py    # Migration script
+│   ├── requirements.txt
+│   └── README.md
+├── frontend/
+│   ├── src/
+│   │   ├── components/    # Components
+│   │   ├── context/       # Context API
+│   │   ├── pages/         # Pages
+│   │   ├── services/      # API calls
+│   │   ├── styles/        # CSS
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── README.md
+├── exams/                 # JSON exams
+├── scripts/               # Useful scripts
+└── README.md
+```
+
+## 🤝 Contributing
+
+1. Fork the project
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is under the MIT license.
+
+## 🆘 Support
+
+For issues or questions:
+- Open an issue on GitHub
+- Documentation: See README in backend/ and frontend/
+
+## ⚙️ Advanced Configuration
+
+### Backend Environment Variables
+
+Edit `backend/.env`:
+
+```env
+DEBUG=True
+DATABASE_URL=sqlite:///./exam_system.db
+SECRET_KEY=your-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=10080
+BACKEND_CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+```
+
+### Switch to PostgreSQL
+
+1. Update `DATABASE_URL` in `.env`:
+```
+DATABASE_URL=postgresql://user:password@localhost/exam_system
+```
+
+2. Add to `requirements.txt`:
+```
+psycopg2-binary==2.9.9
+```
+
+3. Reinstall dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## 🔄 Changelog
+
+### v1.0.0 (2024)
+- ✨ Complete JWT authentication system
+- ✨ Complete CRUD for exams
+- ✨ Results system with details
+- ✨ Administration panel
+- ✨ JSON exam import
+- ✨ React Frontend with Vite
+- ✨ FastAPI Backend
+- ✨ Migration and utility scripts
+- ✨ Docker support
+- ✨ Complete documentation
